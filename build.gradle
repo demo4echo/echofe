@@ -98,6 +98,8 @@ task goDocker(dependsOn: ['dockerStop','docker','dockerRun'])
 // Deal with kubectl
 //
 
+task k8sBuild(dependsOn: 'dockerPushPrivateRegistry')
+
 task k8sDeploy(type:Exec) {
 	commandLine "cmd","/c","kubectl create -f ${productK8SsetupFile}"
 }
