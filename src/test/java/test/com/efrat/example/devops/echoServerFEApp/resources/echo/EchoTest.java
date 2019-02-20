@@ -24,7 +24,9 @@ import com.efrat.example.devops.echoServerFEApp.resources.echo.EchoResource;
 public class EchoTest
 {
 	// Need to take this externally to a file
-	public static final String BASE_URI = "http://192.168.99.100:9999";
+//	public static final String BASE_URI = "http://192.168.99.100:9999"; 	// plain docker
+//	public static final String BASE_URI = "http://192.168.99.104:9999"; 	// k8s-docker?
+	public static final String BASE_URI = "http://192.168.99.104:30999";	// k8s
 
 	/**
 	 * @throws java.lang.Exception
