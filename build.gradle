@@ -101,11 +101,15 @@ task goDocker(dependsOn: ['dockerStop','docker','dockerRun'])
 task k8sBuild(dependsOn: 'dockerPushPrivateRegistry')
 
 task k8sDeploy(type:Exec) {
-	commandLine "cmd","/c","kubectl create -f ${productK8SsetupFile}"
+	dependsOn 'k8sBuild'
+	
+	executable "kubectl"
+	args "create","-f","${productK8SsetupFile}"
 }
 
 task k8sUndeploy(type:Exec) {
-	commandLine "cmd","/c","kubectl delete -f ${productK8SsetupFile}"
+	executable "kubectl"
+	args "delete","-f","${productK8SsetupFile}"
 }
 
 /*

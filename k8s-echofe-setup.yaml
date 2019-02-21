@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echofe-deployment
+  labels:
+    app: echofe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echofe
+  template:
+    metadata:
+      labels:
+        app: echofe
+    spec:
+      containers:
+      - name: echofe
+#        image: echofe:1.0
+        image: il-tlv-tmeltse4:18081/demo-echo/echofe:1.0
+        ports:
+        - containerPort: 9999
+      imagePullSecrets:
+      - name: private-registry-secret
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echofe-service
+spec:
+  # Use NodePort here to be able to access the port on each node
+  type: NodePort
+  selector:
+    app: echofe
+  ports:
+  - name: http
+    protocol: TCP
+    nodePort: 30999 # Set the port to be exposed on each port
+    port: 9999
+    targetPort: 9999
+---
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  name: echo-ingress
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+#spec:
+#  rules:
+#  - http:
+#      paths:
+#      - path: /
+#        backend:
+#          serviceName: echofe-service
+#          servicePort: 9999
