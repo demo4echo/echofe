@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-02-20T13:13:11" hostname="IL-TLV-TMELTSE4" time="1.162">
+<testsuite name="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-03-10T19:44:50" hostname="IL-TLV-TMELTSE4" time="1.012">
   <properties/>
-  <testcase name="testGetEcho" classname="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" time="1.162"/>
+  <testcase name="testGetEcho" classname="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" time="1.012"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
