@@ -51,7 +51,8 @@ repositories
 
 // Adding some properties
 ext {
-	serviceName = "demo-echo" 	// e.g. ucass-ap
+//	serviceName = "demo-echo" 	// e.g. ucass-ap
+	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
 	productVersion = "1.0"
 	productK8SsetupFile = "k8s-echofe-setup.yaml"
@@ -71,7 +72,8 @@ jar {
 
 docker {
 	name "${productName}:${productVersion}"
-	tag "privateRegistry", "il-tlv-tmeltse4:18081/${serviceName}/${productName}:${productVersion}"
+//	tag "privateRegistry", "il-tlv-tmeltse4:18081/${serviceName}/${productName}:${productVersion}"
+	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
 	files jar.outputs
 	copySpec.into("build/libs")
 }

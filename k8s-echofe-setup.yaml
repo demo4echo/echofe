@@ -17,12 +17,13 @@ spec:
       containers:
       - name: echofe
 #        image: echofe:1.0
-        image: il-tlv-tmeltse4:18081/demo-echo/echofe:1.0
+#        image: il-tlv-tmeltse4:18081/demo-echo/echofe:1.0 # Private registry
+        image: tmeltser/echofe:1.0 # DockerHub registry
         ports:
         - containerPort: 9999
-      imagePullSecrets:
-      - name: private-registry-secret
-        
+       # Needed if working with private registry - not sure what happens with DockerHub registry...
+#      imagePullSecrets:
+#      - name: private-registry-secret
 ---
 apiVersion: v1
 kind: Service
