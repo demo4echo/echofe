@@ -4,8 +4,7 @@ pipeline {
     stage('build') {
       steps {
         echo 'hello'
-        bat(script: 'gradlew --version', returnStdout: true)
-        bat(script: 'echo tiran', returnStdout: true, returnStatus: true)
+        bat(script: 'gradlew k8sBuild', returnStdout: true, returnStatus: true)
       }
     }
   }
