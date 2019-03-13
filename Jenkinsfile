@@ -5,6 +5,7 @@ pipeline {
       steps {
         echo 'hello'
         bat(script: 'gradlew --version', returnStdout: true)
+        bat(script: 'echo tiran', returnStdout: true, returnStatus: true)
       }
     }
   }
