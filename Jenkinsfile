@@ -4,7 +4,7 @@ pipeline {
     stage('build') {
       steps {
         echo 'hello'
-        bat(script: 'gradlew --stacktrace k8sBuild', returnStdout: true, returnStatus: true)
+        bat(script: 'docker --version', returnStdout: true, returnStatus: true)
       }
     }
   }
