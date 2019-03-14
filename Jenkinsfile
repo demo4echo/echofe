@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        bat 'gradlew k8sBuild'
+        sh './gradlew k8sBuild'
       }
     }
     stage('deploy') {
