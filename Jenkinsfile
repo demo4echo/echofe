@@ -18,7 +18,7 @@ pipeline {
     }
     stage('undeploy') {
       steps {
-        bat(script: 'gradlew unDeploy', returnStdout: true)
+        bat(script: 'gradlew k8sUndeploy', returnStdout: true)
       }
     }
   }
