@@ -14,16 +14,12 @@ pipeline {
     stage('test') {
       steps {
         bat 'gradlew test'
+        sh 'gradlew test'
       }
     }
     stage('undeploy') {
       steps {
         bat 'gradlew k8sUndeploy'
-      }
-    }
-    stage('archive-junit-artifacts') {
-      steps {
-        junit 'build/test-reports/**/*.xml'
       }
     }
   }
