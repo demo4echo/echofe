@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2019-03-12T14:49:04" hostname="IL-TLV-TMELTSE4" time="1.484">
+<testsuite name="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2019-03-14T13:47:23" hostname="IL-TLV-TMELTSE4" time="1.45">
   <properties/>
-  <testcase name="testGetEcho" classname="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" time="1.484">
+  <testcase name="testGetEcho" classname="test.com.efrat.example.devops.echoServerFEApp.resources.echo.EchoTest" time="1.45">
     <failure message="javax.ws.rs.ProcessingException: java.net.ConnectException: Connection refused: connect" type="javax.ws.rs.ProcessingException">javax.ws.rs.ProcessingException: java.net.ConnectException: Connection refused: connect
 	at org.glassfish.jersey.client.internal.HttpUrlConnector.apply(HttpUrlConnector.java:284)
 	at org.glassfish.jersey.client.ClientRuntime.invoke(ClientRuntime.java:278)
