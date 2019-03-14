@@ -8,17 +8,17 @@ pipeline {
     }
     stage('deploy') {
       steps {
-        bat(script: 'gradlew k8sDeploy', returnStdout: true)
+        bat 'gradlew k8sDeploy'
       }
     }
     stage('test') {
       steps {
-        bat(script: 'gradlew test', returnStdout: true)
+        bat 'gradlew test'
       }
     }
     stage('undeploy') {
       steps {
-        bat(script: 'gradlew k8sUndeploy', returnStdout: true)
+        bat 'gradlew k8sUndeploy'
       }
     }
   }
