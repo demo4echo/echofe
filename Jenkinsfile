@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        bat(script: 'gradlew k8sBuild', returnStdout: true)
+        bat 'gradlew k8sBuild'
       }
     }
     stage('deploy') {
