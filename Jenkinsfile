@@ -13,8 +13,8 @@ pipeline {
     }
     stage('test') {
       steps {
-        bat 'gradlew test'
-        sh 'gradlew test'
+        bat './gradlew test'
+        sh './gradlew test'
       }
     }
     stage('undeploy') {
