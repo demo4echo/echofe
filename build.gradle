@@ -94,7 +94,7 @@ task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
 task k8sBuild(dependsOn: 'dockerPushPrivateRegistry')
 
 task k8sDeploy(type:Exec) {
-	dependsOn 'k8sBuild'
+//	dependsOn 'k8sBuild'
 	
 	executable "kubectl"
 	args "create","-f","${productK8SsetupFile}"
