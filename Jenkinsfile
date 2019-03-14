@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        sh './gradlew k8sBuild'
+        sh 'ls -la'
       }
     }
     stage('deploy') {
