@@ -21,5 +21,10 @@ pipeline {
         bat 'gradlew k8sUndeploy'
       }
     }
+    stage('archive-junit-artifacts') {
+      steps {
+        junit 'build/test-reports/**/*.xml'
+      }
+    }
   }
 }
