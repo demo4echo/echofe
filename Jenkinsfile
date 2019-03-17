@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        sh 'whoami'
+        sh 'sudo chown jenkins: -R \\$PWD/'
         sh './gradlew k8sBuild'
       }
     }
