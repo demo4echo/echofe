@@ -9,7 +9,7 @@ pipeline {
 
       }
       steps {
-        bat 'echo hello'
+        sh 'echo hello'
       }
     }
   }
