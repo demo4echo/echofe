@@ -10,8 +10,8 @@ pipeline {
 
       }
       steps {
-        sh 'ls -la /root'
-        sh './gradlew k8sBuild'
+        sh 'ls -la /root & ./gradlew --status'
+        sh './gradlew k8sBuild --no-daemon'
       }
     }
   }
