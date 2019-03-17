@@ -10,7 +10,8 @@ pipeline {
 
       }
       steps {
-        sh 'gradlew k8sBuild'
+        sh 'whoami'
+        sh './gradlew k8sBuild'
       }
     }
   }
