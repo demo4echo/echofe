@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        sh './gradlew k8sBuild'
+        sh 'gradlew k8sBuild'
       }
     }
   }
