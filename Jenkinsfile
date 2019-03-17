@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        sh 'echo tiran'
+        sh 'ls -la /root'
         sh './gradlew k8sBuild'
       }
     }
