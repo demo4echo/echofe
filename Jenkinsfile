@@ -10,7 +10,7 @@ pipeline {
 
       }
       steps {
-        sh 'docker ps'
+        sh './gradlew.bat k8sBuild'
       }
     }
   }
