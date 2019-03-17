@@ -4,12 +4,13 @@ pipeline {
     stage('build') {
       agent {
         docker {
-          image 'maven:3-alpine'
+          image 'openjdk:8-jre-alpine'
+          args '--rm --name dockerctl -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker'
         }
 
       }
       steps {
-        sh 'mvn --version'
+        sh 'docker ps'
       }
     }
   }
