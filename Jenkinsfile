@@ -17,7 +17,7 @@ pipeline {
       agent {
         docker {
           image 'lachlanevenson/k8s-kubectl'
-          args '--name kubectl -v /etc/kubernetes:/etc/kubernetes --entrypoint sh'
+          args '--name kubectl -v /etc/kubernetes:/etc/kubernetes --entrypoint=\'\''
         }
 
       }
