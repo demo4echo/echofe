@@ -16,8 +16,8 @@ pipeline {
     stage('deploy') {
       agent {
         docker {
-          image 'lachlanevenson/k8s-kubectl'
-          args '--name kubectl -v /etc/kubernetes:/etc/kubernetes --entrypoint=\'\''
+          image 'openjdk:8-jdk-alpine'
+          args '--name kubectl -v /etc/kubernetes:/etc/kubernetes --entrypoint=\'\' -v /usr/local/sbin:/usr/local/sbin'
         }
 
       }
