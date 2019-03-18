@@ -4,8 +4,8 @@ pipeline {
     stage('build') {
       agent {
         docker {
-          args '--name dockerctl -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -v $HOME/.gradle:/root/.gradle'
           image 'openjdk:8-jdk-alpine'
+          args '--name dockerctl -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -v $HOME/.gradle:/root/.gradle -v $HOME/.docker:/root/.docker'
         }
 
       }
