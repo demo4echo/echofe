@@ -22,7 +22,7 @@ pipeline {
 
       }
       steps {
-        sh './gradlew k8sDeploy --no-daemon -Pkubeconfig="/etc/kubernetes/kubelet.conf" -Pserver="https://192.168.99.100:8443"'
+        sh './gradlew k8sDeploy --no-daemon'
       }
     }
   }
