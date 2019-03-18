@@ -97,12 +97,29 @@ task k8sDeploy(type:Exec) {
 //	dependsOn 'k8sBuild'
 	
 	executable "kubectl"
-	args "create","-f","${productK8SsetupFile}"
+
+	if (project.hasProperty('kubeconfig') & project.hasProperty('server')) {
+		args "--kubeconfig=" + kubeconfig,"--server=" + server,"create","-f","${productK8SsetupFile}"
+	}
+	else {
+		args "create","-f","${productK8SsetupFile}"
+	}
 }
 
 task k8sUndeploy(type:Exec) {
 	executable "kubectl"
 	args "delete","-f","${productK8SsetupFile}"
+}
+
+task k8sTiran(type:Exec) {
+	executable "kubectl"
+	
+	if (project.hasProperty('kubeconfig') & project.hasProperty('server')) {
+		args "--kubeconfig=" + kubeconfig,"--server=" + server,"version"
+	}
+	else {
+		args "cluster-info"
+	}
 }
 
 description = 'A trivial Gradle build'
