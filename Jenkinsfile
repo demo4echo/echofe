@@ -16,7 +16,7 @@ pipeline {
       agent {
         docker {
           image 'openjdk:8-jdk-alpine'
-          args '--name kubectl -v /etc/kubernetes:/etc/kubernetes -v /usr/local/sbin:/usr/local/sbin -v $HOME/.gradle:/root/.gradle --entrypoint=\'\''
+          args '--name kubectl -v /usr/local/sbin:/usr/local/sbin -v $HOME/.kube:/root/.kube -v $HOME/.gradle:/root/.gradle --entrypoint=\'\''
         }
       }
       steps {
