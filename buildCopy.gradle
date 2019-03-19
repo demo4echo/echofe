@@ -103,10 +103,16 @@ task goDocker(dependsOn: ['dockerStop','docker','dockerRun'])
 task k8sBuild(dependsOn: 'dockerPushPrivateRegistry')
 
 task k8sDeploy(type:Exec) {
-	dependsOn 'k8sBuild'
+//	dependsOn 'k8sBuild'
 	
 	executable "kubectl"
-	args "create","-f","${productK8SsetupFile}"
+
+	if (project.hasProperty('kubeconfig') & project.hasProperty('server')) {
+		args "--kubeconfig=" + kubeconfig,"--server=" + server,"create","-f","${productK8SsetupFile}"
+	}
+	else {
+		args "create","-f","${productK8SsetupFile}"
+	}
 }
 
 task k8sUndeploy(type:Exec) {
