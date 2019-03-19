@@ -46,7 +46,7 @@ pipeline {
 
     failure {
       echo 'I failed :('
-      archiveArtifacts(artifacts: 'Jenkinsfile', fingerprint: true)
+      archiveArtifacts artifacts: 'Jenkinsfile', fingerprint: true
     }
 
     changed {
