@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      defaultContainer 'jdk-gradle-docker-k8s'
+      defaultContainer 'jnlp'
       yamlFile 'k8s-jenkins-slave.yaml'
     }
 
@@ -9,22 +9,30 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh './gradlew k8sBuild --no-daemon'
+      	container('jdk-gradle-docker-k8s') {
+        		sh './gradlew k8sBuild --no-daemon'
+      	}
       }
     }
     stage('deploy') {
       steps {
-        sh './gradlew k8sDeploy --no-daemon'
+      	container('jdk-gradle-docker-k8s') {
+        		sh './gradlew k8sDeploy --no-daemon'
+        	}
       }
     }
     stage('test') {
       steps {
-        sh './gradlew test --no-daemon'
+      	container('jdk-gradle-docker-k8s') {
+        		sh './gradlew test --no-daemon'
+			}
       }
     }
     stage('undeploy') {
       steps {
-        sh './gradlew k8sUndeploy --no-daemon'
+      	container('jdk-gradle-docker-k8s') {
+        		sh './gradlew k8sUndeploy --no-daemon'
+			}
       }
     }
   }
