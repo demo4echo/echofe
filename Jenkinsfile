@@ -32,7 +32,8 @@ pipeline {
     always {
       echo 'One way or another, I have finished'
       junit 'build/test-results/**/*.xml'
-		archiveArtifacts artifacts: 'Jenkinsfile', fingerprint: true
+      archiveArtifacts(artifacts: 'Jenkinsfile', fingerprint: true)
+
     }
 
     success {
