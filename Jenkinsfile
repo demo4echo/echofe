@@ -17,5 +17,15 @@ pipeline {
         sh './gradlew k8sDeploy --no-daemon'
       }
     }
+    stage('test') {
+      steps {
+        sh './gradlew test --no-daemon'
+      }
+    }
+    stage('undeploy') {
+      steps {
+        sh './gradlew k8sUndeploy --no-daemon'
+      }
+    }
   }
 }
