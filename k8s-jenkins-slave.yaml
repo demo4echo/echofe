@@ -8,9 +8,9 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/jnlp-slave
-    command:
-    - cat
-    tty: true
+#    command:
+#    - cat
+#    tty: true
     env:
     - name: CONTAINER_ENV_VAR
       value: jnlp  
