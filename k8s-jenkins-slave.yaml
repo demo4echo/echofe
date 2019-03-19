@@ -28,24 +28,18 @@ spec:
   - name: docker-socket
     hostPath:
       path: /var/run/docker.sock
-#      type: Socket
   - name: docker-bin
     hostPath:
       path: /usr/bin/docker
-#      type: File
   - name: kubectl-bin-in-path
     hostPath:
       path: /usr/local/sbin
-#      type: Directory
   - name: docker-cache-vol
     hostPath:
       path: /root/.docker
-#      type: Directory
   - name: kubectl-cache-vol
     hostPath:
       path: /root/.kube
-#      type: Directory
   - name: gradle-cache-vol
     hostPath:
       path: /root/.gradle
-#      type: Directory
