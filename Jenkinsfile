@@ -5,13 +5,13 @@ pipeline {
   }
   stages {
     stage('build') {
-      agent any
+//      agent any
       steps {
         sh './gradlew k8sBuild --no-daemon'
       }
     }
     stage('deploy') {
-      agent any 
+//      agent any 
       steps {
         sh './gradlew k8sDeploy --no-daemon'
       }
