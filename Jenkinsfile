@@ -1,9 +1,10 @@
 pipeline {
   agent {
     kubernetes {
-		defaultContainer 'jdk-gradle-docker-k8s'
-		yamlFile 'k8s-jenkins-slave.yaml'
-	 }
+      defaultContainer 'jdk-gradle-docker-k8s'
+      yamlFile 'k8s-jenkins-slave.yaml'
+    }
+
   }
   stages {
     stage('build') {
@@ -31,18 +32,28 @@ pipeline {
     always {
       echo 'One way or another, I have finished'
       junit 'build/test-results/**/*.xml'
+
     }
+
     success {
       echo 'I succeeeded!'
+
     }
+
     unstable {
       echo 'I am unstable :/'
+
     }
+
     failure {
       echo 'I failed :('
+
     }
+
     changed {
       echo 'Things were different before...'
+
     }
+
   }
 }
