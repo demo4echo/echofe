@@ -6,11 +6,22 @@ metadata:
     slave-agent: jenkins
 spec:
   containers:
+  - name: jnlp
+    image: jenkins/jnlp-slave
+    command:
+    - cat
+    tty: true
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: jnlp  
   - name: jdk-gradle-docker-k8s
     image: openjdk:8-jdk-alpine
     command:
     - cat
     tty: true
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: jdk-gradle-docker-k8s  
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run/docker.sock
