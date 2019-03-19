@@ -31,14 +31,12 @@ pipeline {
   post {
     always {
       echo 'One way or another, I have finished'
-      junit 'build/test-results/**/*.xml'
-      archiveArtifacts(artifacts: 'Jenkinsfile', fingerprint: true)
 
     }
 
     success {
       echo 'I succeeeded!'
-
+      junit 'build/test-results/**/*.xml'
     }
 
     unstable {
@@ -48,7 +46,7 @@ pipeline {
 
     failure {
       echo 'I failed :('
-
+      archiveArtifacts(artifacts: 'Jenkinsfile', fingerprint: true)
     }
 
     changed {
