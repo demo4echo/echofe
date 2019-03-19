@@ -1,9 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-//      defaultContainer 'jdk-gradle-docker-k8s'
-//      yamlFile '-k8s-jenkins-slave.yaml'
-		yaml """
+      yaml '''
 apiVersion: v1
 kind: Pod
 metadata:
@@ -55,7 +53,7 @@ spec:
     hostPath:
       path: /root/.gradle
 #      type: Directory
-"""		
+'''
     }
 
   }
