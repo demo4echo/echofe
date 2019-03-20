@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-		cloud 'kubernetes'
+//		cloud 'kubernetes'
 		label 'jenkins-slave'
 //		label 'slave-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
