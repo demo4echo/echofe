@@ -1,6 +1,8 @@
 pipeline {
   agent {
     kubernetes {
+		cloud 'kubernetes'
+		label buildId()
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'k8s-jenkins-slave.yaml'
     }
