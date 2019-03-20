@@ -2,7 +2,7 @@ pipeline {
   agent {
     kubernetes {
 //      defaultContainer 'jdk-gradle-docker-k8s'
-//      yamlFile 'k8s-jenkins-slave.yaml'
+      yamlFile 'k8s-jenkins-slave.yaml'
     }
   }
   stages {
