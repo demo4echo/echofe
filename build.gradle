@@ -42,13 +42,14 @@ repositories
 
 // Adding some properties
 ext {
-//	serviceName = "demo-echo" 	// e.g. ucass-ap
+//	serviceName = "demo-echo" 	// e.g. ucass-ap (for Nexus registry)
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
 	productVersion = "1.0"
 	productK8SsetupFile = "k8s-echofe-setup.yaml"
 }
 
+// Create an uber jar
 jar {
 	manifest
 	{

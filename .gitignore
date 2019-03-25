@@ -1,2 +1,6 @@
 /.gradle/
 *.class
+/bin/
+!/bin/.gitignore
+/build/
+/gradle/wrapper/gradle-wrapper.jar
