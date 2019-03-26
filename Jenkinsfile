@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-//		cloud 'kubernetes'
+//		cloud 'kubernetesXYZ'
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'k8s-jenkins-slave.yaml'
