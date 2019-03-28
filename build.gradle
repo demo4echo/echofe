@@ -80,7 +80,7 @@ task dockerBuild(dependsOn: ['jar','docker'])
 dockerRun {
 	name "${productName}"
 	image "${productName}:${productVersion}"
-	ports '9999:9999'
+	ports '30999:9999'
 	daemonize true
 	clean true
 }

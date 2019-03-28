@@ -4,7 +4,7 @@ pipeline {
 //		cloud 'kubernetes'
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
-      yamlFile 'k8s-jenkins-slave.yaml'
+      yamlFile 'Jenkinsfile.JenkinsSlave.yaml'
     }
   }
   stages {
