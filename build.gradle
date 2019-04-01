@@ -46,7 +46,7 @@ ext {
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
 	productVersion = "1.0"
-	productK8SsetupFile = "k8s-echofe-setup.yaml"
+	productK8SsetupFile = "echofeManifest.yaml"
 }
 
 // Create an uber jar
@@ -98,12 +98,12 @@ task k8sDeploy(type:Exec) {
 //	dependsOn 'k8sBuild'
 	
 	executable "kubectl"
-	args "create","-f","${productK8SsetupFile}"
+	args "create","-f","k8s/manifests/${productK8SsetupFile}"
 }
 
 task k8sUndeploy(type:Exec) {
 	executable "kubectl"
-	args "delete","-f","${productK8SsetupFile}"
+	args "delete","-f","k8s/manifests/${productK8SsetupFile}"
 }
 
 description = 'A trivial Gradle build'

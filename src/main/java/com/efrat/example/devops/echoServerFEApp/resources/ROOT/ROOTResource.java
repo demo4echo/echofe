@@ -1,27 +1,27 @@
 /**
  * 
  */
-package com.efrat.example.devops.echoServerFEApp.resources.echo;
+package com.efrat.example.devops.echoServerFEApp.resources.ROOT;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
  * @author tmeltse
  *
  */
-@Path("echo")
-public class EchoResource 
+@Path("/")
+public class ROOTResource 
 {
-	public static final String SELF_PATH = "echo";
+	public static final String SELF_PATH = "/";
+	public static final String GET_RESPONSE = "I'm Alive!";
 	
 	/**
 	 * 
 	 */
-	public EchoResource() 
+	public ROOTResource() 
 	{
 		// TODO Auto-generated constructor stub
 	}
@@ -30,13 +30,12 @@ public class EchoResource
      * Method handling HTTP GET requests. The returned object will be sent
      * to the client as "text/plain" media type.
      *
-     * @param what - the item to echo
      * @return String that will be returned as a text/plain response.
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String getEcho(@QueryParam("what") String what) 
+    public String getROOT() 
     {
-        return what;
+        return GET_RESPONSE;
     }	
 }
