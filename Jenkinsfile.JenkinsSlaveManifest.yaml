@@ -27,6 +27,8 @@ spec:
       mountPath: /root/.kube
     - name: gradle-cache-vol
       mountPath: /root/.gradle
+    - name: helm-cache-vol
+      mountPath: /root/.helm
   volumes:
   - name: docker-socket
     hostPath:
@@ -46,3 +48,7 @@ spec:
   - name: gradle-cache-vol
     hostPath:
       path: /root/.gradle
+  - name: helm-cache-vol
+    hostPath:
+      path: /root/.helm
+      

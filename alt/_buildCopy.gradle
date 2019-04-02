@@ -14,28 +14,31 @@ plugins
 	// gradle-docker plugins
 	id 'com.palantir.docker' version '0.21.0'
 	id 'com.palantir.docker-run' version '0.21.0'
+	
+	// gradle-cloud-deployer plugin(s)
+//	id "de.qaware.cloud.deployer" version "0.9.2"
 
-	// gradle-helm-plugin plugins
-	id 'org.unbroken-dome.helm' version '0.3.0'
-	id 'org.unbroken-dome.helm-releases' version '0.3.0'
-//	id 'org.unbroken-dome.helm-commands' version '0.3.0'
-//	id 'org.unbroken-dome.helm-publish' version '0.3.0'
+	// gradle-plugins/kubectl plugin
+//	id "com.github.rmee.kubectl" version "0.8.20181101124911"
 }
 
 dependencies
 {
 	// This dependency is exported to consumers, that is to say found on their compile classpath.
-//	api 'org.apache.commons:commons-math3:3.6.1'
+	api 'org.apache.commons:commons-math3:3.6.1'
 
 	// This dependency is used internally, and not exposed to consumers on their own compile classpath.
-//	implementation 'com.google.guava:guava:23.0'
+	implementation 'com.google.guava:guava:23.0'
 
 	// Use JUnit test framework
 	testImplementation 'junit:junit:4.12'
 
 	// Jersey
 	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
+//	implementation 'org.glassfish.jersey.core:jersey-common:2.27'
 	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
+//	testImplementation 'org.glassfish.jersey.test-framework:jersey-test-framework-util:2.27'
+//	testImplementation 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-bundle:2.27'
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -48,16 +51,13 @@ repositories
 
 // Adding some properties
 ext {
-//	serviceName = "demo-echo" 	// e.g. ucass-ap (for Nexus registry)
+//	serviceName = "demo-echo" 	// e.g. ucass-ap
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
 	productVersion = "1.0"
-	productK8SmanifestsFolder = "k8s/manifests"
-	productK8SsetupFile = "echofeManifest.yaml"
-	productK8ShelmChartsFolder = "k8s/helm/charts"
+	productK8SsetupFile = "k8s-echofe-setup.yaml"
 }
 
-// Create an uber jar
 jar {
 	manifest
 	{
@@ -69,10 +69,6 @@ jar {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
 }
-
-//
-// docker
-//
 
 docker {
 	name "${productName}:${productVersion}"
@@ -88,7 +84,7 @@ task dockerBuild(dependsOn: ['jar','docker'])
 dockerRun {
 	name "${productName}"
 	image "${productName}:${productVersion}"
-	ports '30999:9999'
+	ports '9999:9999'
 	daemonize true
 	clean true
 }
@@ -96,8 +92,12 @@ dockerRun {
 // Give an alias to dockerRun task
 task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
 
+// Docker all-in-one
+task goDocker(dependsOn: ['dockerStop','docker','dockerRun'])
+//task goDocker(dependsOn: ['docker','dockerRun'])
+
 //
-// kubectl
+// Deal with kubectl
 //
 
 task k8sBuild(dependsOn: 'dockerPushPrivateRegistry')
@@ -106,54 +106,59 @@ task k8sDeploy(type:Exec) {
 //	dependsOn 'k8sBuild'
 	
 	executable "kubectl"
-	args "create","-f","${productK8SmanifestsFolder}/${productK8SsetupFile}"
+
+	if (project.hasProperty('kubeconfig') & project.hasProperty('server')) {
+		args "--kubeconfig=" + kubeconfig,"--server=" + server,"create","-f","${productK8SsetupFile}"
+	}
+	else {
+		args "create","-f","${productK8SsetupFile}"
+	}
 }
 
 task k8sUndeploy(type:Exec) {
 	executable "kubectl"
-	args "delete","-f","${productK8SmanifestsFolder}/${productK8SsetupFile}"
+	args "delete","-f","${productK8SsetupFile}"
 }
 
-//
-// helm
-//
-
-helm {
-//	home = file("$buildDir/helm/home")
-	home = file("$System.env.HOME/.helm")
-	debug = true
-
-	charts {
-		echofe {
-//			chartName = 'foo'
-//			chartVersion = '1.2.3'
-			sourceDir = file("${productK8ShelmChartsFolder}/${productName}")
+/*
+// Kubectl related tasks buildup (gradle-cloud-deployer) 
+deployer {
+	kubernetes {
+		id = "k8s-echofe"
+		baseUrl = "https://192.168.99.104:8443"
+		namespace = "default"
+		strategy = "UPDATE"
+		auth {
+			username = "docker"
+			password = "tcuser"
 		}
-	}
-
-	lint {
-		// enable/disable linting by default
-		enabled = true
-		// treat linter warnings as errors (failing the build)
-		strict = true
-	}
-
-	releases {
-		echofe {
-			from charts.echofe
-//			from chart("${productName}")
-			purge = true
+		ssl {
+			trustAll = true
 		}
+		files = [file("k8s-echofe-setup.yml")]
 	}
 }
+*/
+/*
+// gradle-plugins/kubectl
+kubectl {
+	url = "https://192.168.99.104:8443" // Docker URL is "http://192.168.99.104:2376"
+//	credentials {
+//		userName = "docker"
+//		password = "tcuser"
+//		token = ... // (alternative to userName/password)
+//	}
+	namespace = 'default'
+	insecureSkipTlsVerify = true
+//	client {
+//		version = '2.9.1' // newest is - 2.12.3  
+//		imageName = 'dtzar/helm-kubectl' 
+//	}
+}
 
-task helmBuild(dependsOn: 'k8sBuild')
-
-task helmUninstall(dependsOn: 'helmDelete')
-
-// Notes:
-// 1. helmPackge and helmInstall used as is
-// 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
-
+task kubectlVersion {
+	kubectl.exec("kubectl version")
+}
+*/
 description = 'A trivial Gradle build'
 version = '1.0'
