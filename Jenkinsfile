@@ -10,30 +10,27 @@ pipeline {
   stages {
     stage('build') {
       steps {
-//      	container('jdk-gradle-docker-k8s') {
-        		sh './gradlew k8sBuild --no-daemon'
-//     	}
+     		sh './gradlew helmBuild --no-daemon'
       }
     }
-    stage('deploy') {
+    stage('package') {
       steps {
-//     	container('jdk-gradle-docker-k8s') {
-        		sh './gradlew k8sDeploy --no-daemon'
-//			}
+     		sh './gradlew helmPackage --no-daemon'
+      }
+    }
+    stage('install') {
+      steps {
+     		sh './gradlew helmInstall --no-daemon'
       }
     }
     stage('test') {
       steps {
-//      	container('jdk-gradle-docker-k8s') {
-        		sh './gradlew test --no-daemon'
-//			}
+     		sh './gradlew test --no-daemon'
       }
     }
-    stage('undeploy') {
+    stage('uninstall') {
       steps {
-//      	container('jdk-gradle-docker-k8s') {
-        		sh './gradlew k8sUndeploy --no-daemon'
-//			}
+     		sh './gradlew helmUninstall --no-daemon'
       }
     }
   }
