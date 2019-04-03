@@ -18,10 +18,18 @@ plugins
 	// gradle-helm-plugin plugins
 	id 'org.unbroken-dome.helm' version '0.3.0'
 	id 'org.unbroken-dome.helm-releases' version '0.3.0'
+//	id 'org.unbroken-dome.helm-commands' version '0.3.0'
+//	id 'org.unbroken-dome.helm-publish' version '0.3.0'
 }
 
 dependencies
 {
+	// This dependency is exported to consumers, that is to say found on their compile classpath.
+//	api 'org.apache.commons:commons-math3:3.6.1'
+
+	// This dependency is used internally, and not exposed to consumers on their own compile classpath.
+//	implementation 'com.google.guava:guava:23.0'
+
 	// Use JUnit test framework
 	testImplementation 'junit:junit:4.12'
 
@@ -40,6 +48,7 @@ repositories
 
 // Adding some properties
 ext {
+//	serviceName = "demo-echo" 	// e.g. ucass-ap (for Nexus registry)
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
 	productVersion = "1.0"
@@ -67,6 +76,7 @@ jar {
 
 docker {
 	name "${productName}:${productVersion}"
+//	tag "privateRegistry", "il-tlv-tmeltse4:18081/${serviceName}/${productName}:${productVersion}"
 	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
 	files jar.outputs
 	copySpec.into("build/libs")
@@ -83,22 +93,40 @@ dockerRun {
 	clean true
 }
 
-// Main task used from docker plugins
 task dockerBuildAndPublish(dependsOn: 'dockerPushPrivateRegistry')
 
 // Give an alias to dockerRun task
 task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
 
 //
+// kubectl
+//
+
+task k8sDeploy(type:Exec) {
+//	dependsOn 'k8sBuild'
+	
+	executable "kubectl"
+	args "create","-f","${productK8SmanifestsFolder}/${productK8SsetupFile}"
+}
+
+task k8sUndeploy(type:Exec) {
+	executable "kubectl"
+	args "delete","-f","${productK8SmanifestsFolder}/${productK8SsetupFile}"
+}
+
+//
 // helm
 //
 
 helm {
+//	home = file("$buildDir/helm/home")
 	home = file("$System.env.HOME/.helm")
 	debug = true
 
 	charts {
 		echofe {
+//			chartName = 'foo'
+//			chartVersion = '1.2.3'
 			sourceDir = file("${productK8ShelmChartsFolder}/${productName}")
 		}
 	}
@@ -113,6 +141,7 @@ helm {
 	releases {
 		echofe {
 			from charts.echofe
+//			from chart("${productName}")
 			purge = true
 		}
 	}
