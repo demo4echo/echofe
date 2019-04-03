@@ -147,8 +147,6 @@ helm {
 	}
 }
 
-task helmBuild(dependsOn: 'k8sBuild')
-
 task helmUninstall(dependsOn: 'helmDelete')
 
 // Notes:
