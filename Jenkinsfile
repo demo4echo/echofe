@@ -10,7 +10,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
-     		sh './gradlew helmBuild --no-daemon'
+     		sh './gradlew dockerBuildAndPublish --no-daemon'
       }
     }
     stage('package') {
