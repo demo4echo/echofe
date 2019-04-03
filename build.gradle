@@ -93,14 +93,14 @@ dockerRun {
 	clean true
 }
 
+task dockerBuildAndPublish(dependsOn: 'dockerPushPrivateRegistry')
+
 // Give an alias to dockerRun task
 task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
 
 //
 // kubectl
 //
-
-task k8sBuild(dependsOn: 'dockerPushPrivateRegistry')
 
 task k8sDeploy(type:Exec) {
 //	dependsOn 'k8sBuild'
@@ -152,7 +152,7 @@ task helmBuild(dependsOn: 'k8sBuild')
 task helmUninstall(dependsOn: 'helmDelete')
 
 // Notes:
-// 1. helmPackge and helmInstall used as is
+// 1. helmPackge and helmInstall tasks are used as is
 // 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
 
 description = 'A trivial Gradle build'
