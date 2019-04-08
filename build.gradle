@@ -42,7 +42,9 @@ repositories
 ext {
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
-	productVersion = "1.0"
+	productVersion = "0.1.0-feature1"
+	productInternalPort = "9999"
+	productExternalPort = "30999"
 	productK8SmanifestsFolder = "k8s/manifests"
 	productK8SsetupFile = "echofeManifest.yaml"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
@@ -50,13 +52,11 @@ ext {
 
 // Create an uber jar
 jar {
-	manifest
-	{
+	manifest	{
    	attributes "Main-Class": "com.efrat.example.devops.echoServerFEApp.EchoServerFEApp"
 	}
 
-	from
-	{
+	from	{
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	}
 }
@@ -68,6 +68,7 @@ jar {
 docker {
 	name "${productName}:${productVersion}"
 	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
+	buildArgs([PRODUCT_NAME:"${project.name}",PRODUCT_VERSION:"${productVersion}"])
 	files jar.outputs
 	copySpec.into("build/libs")
 }
@@ -78,7 +79,7 @@ task dockerBuild(dependsOn: ['jar','docker'])
 dockerRun {
 	name "${productName}"
 	image "${productName}:${productVersion}"
-	ports '30999:9999'
+	ports "${productExternalPort}:${productInternalPort}"
 	daemonize true
 	clean true
 }
@@ -124,5 +125,5 @@ task helmUninstall(dependsOn: 'helmDelete')
 // 1. helmPackge and helmInstall tasks are used as is
 // 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
 
-description = 'A trivial Gradle build'
-version = '1.0'
+description = 'The Echo Frontend demo product'
+version = "${productVersion}"
