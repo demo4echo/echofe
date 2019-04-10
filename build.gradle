@@ -20,7 +20,7 @@ plugins
 	id 'org.unbroken-dome.helm-releases' version '0.3.0'
 	
 	// gradle-jgitver-plugin pluin
-	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
+//	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
 	
 	// gradle-git-version plugin
 	id 'com.palantir.git-version' version '0.11.0'
@@ -48,8 +48,9 @@ repositories
 ext {
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
-	calculatedProductVersion = gitVersion()
-	productVersion = "v0.1.0-feature1"
+//	productVersion = "v0.1.0-feature1"
+//	productVersion = gitVersion()
+	productVersion = manifestVersion()
 	productInternalPort = "9999"
 	productExternalPort = "30999"
 	productK8SmanifestsFolder = "k8s/manifests"
@@ -138,18 +139,20 @@ helm {
 
 task helmUninstall(dependsOn: 'helmDelete')
 
-task tiran() {
-//	print "we got [$project.ext.git_sha1_full]"
-//	print "The version is: [" + gitVersion() +"]"
-	print "The version is: [${calculatedProductVersion}]"
-	
-//def details = versionDetails()
-//details.lastTag
-//details.commitDistance
-//details.gitHash
-//details.gitHashFull // full 40-character Git commit hash
-//details.branchName // is null if the repository in detached HEAD mode
-//details.isCleanTag	
+//
+// The function builds a proper version name
+//
+def manifestVersion() {
+	def details = versionDetails()
+
+	return "${details.lastTag}-${details.branchName}"
+
+//	println "last tag is: ${details.lastTag}"
+//	println "commitDistance is: ${details.commitDistance}"
+//	println "gitHash is: ${details.gitHash}"
+//	println "gitHashFull is: ${details.gitHashFull}" // full 40-character Git commit hash
+//	println "branchName is: ${details.branchName}" // is null if the repository in detached HEAD mode
+//	println "isCleanTag is: ${details.isCleanTag}"	
 }
 
 // Notes:
