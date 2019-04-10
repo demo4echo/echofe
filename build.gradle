@@ -139,7 +139,7 @@ task helmUninstall(dependsOn: 'helmDelete')
 
 task tiran() {
 //	print "we got [$project.ext.git_sha1_full]"
-	print "The version is:[" + gitVersion() +"]"
+	print "The version is: [" + gitVersion() +"]"
 }
 
 // Notes:
