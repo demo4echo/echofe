@@ -125,7 +125,6 @@ helm {
 	releases {
 		echofe {
 			from charts.echofe
-//			version = "${productVersion}"
 			purge = true
 			// pass values (like --set on the command line)
 //			values = ['image.tag':"${productVersion}"]
