@@ -21,6 +21,9 @@ plugins
 	
 	// gradle-jgitver-plugin pluin
 	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
+	
+	// gradle-git-version plugin
+	id 'com.palantir.git-version' version '0.11.0'
 }
 
 dependencies
@@ -133,6 +136,11 @@ helm {
 }
 
 task helmUninstall(dependsOn: 'helmDelete')
+
+task tiran() {
+//	print "we got [$project.ext.git_sha1_full]"
+	print "The version is:[" + gitVersion() +"]"
+}
 
 // Notes:
 // 1. helmPackge and helmInstall tasks are used as is
