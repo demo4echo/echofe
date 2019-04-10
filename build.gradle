@@ -48,6 +48,7 @@ repositories
 ext {
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
+	calculatedProductVersion = gitVersion()
 	productVersion = "v0.1.0-feature1"
 	productInternalPort = "9999"
 	productExternalPort = "30999"
@@ -139,7 +140,16 @@ task helmUninstall(dependsOn: 'helmDelete')
 
 task tiran() {
 //	print "we got [$project.ext.git_sha1_full]"
-	print "The version is: [" + gitVersion() +"]"
+//	print "The version is: [" + gitVersion() +"]"
+	print "The version is: [${calculatedProductVersion}]"
+	
+//def details = versionDetails()
+//details.lastTag
+//details.commitDistance
+//details.gitHash
+//details.gitHashFull // full 40-character Git commit hash
+//details.branchName // is null if the repository in detached HEAD mode
+//details.isCleanTag	
 }
 
 // Notes:
