@@ -6,7 +6,8 @@ replicaCount: 1
 
 image:
   repository: tmeltser/echofe
-  tag: "1.0"
+#  tag: "1.0"
+  tag: "${imageTag}"
   pullPolicy: IfNotPresent
 
 nameOverride: ""

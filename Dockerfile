@@ -1,17 +1,19 @@
 FROM openjdk:8-jre-alpine
 
-ARG PRODUCT_NAME
-ARG PRODUCT_VERSION
+ARG JAR_PRODUCT_NAME
+ARG JAR_PRODUCT_VERSION
 
-RUN addgroup echogroup && adduser -D -H echouser -G echogroup
+WORKDIR /opt/com.mavenir/demo-echo/echofe
+
+COPY ./build/libs/$JAR_PRODUCT_NAME-$JAR_PRODUCT_VERSION.jar ./
+
+RUN addgroup echogroup && \
+	adduser -D -H echouser -G echogroup && \
+	ln -s ./$JAR_PRODUCT_NAME-$JAR_PRODUCT_VERSION.jar ./echofe.jar
 
 USER echouser
 
-WORKDIR /opt/com.mavenir/demo/echo
-
-COPY ./build/libs/$PRODUCT_NAME-$PRODUCT_VERSION.jar ./
-
-ENTRYPOINT ["java","-jar","$PRODUCT_NAME-$PRODUCT_VERSION.jar"]
+ENTRYPOINT ["java","-jar","./echofe.jar"]
 
 EXPOSE 9999
 

@@ -18,6 +18,9 @@ plugins
 	// gradle-helm-plugin plugins
 	id 'org.unbroken-dome.helm' version '0.3.0'
 	id 'org.unbroken-dome.helm-releases' version '0.3.0'
+	
+	// gradle-jgitver-plugin pluin
+	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
 }
 
 dependencies
@@ -42,7 +45,7 @@ repositories
 ext {
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
-	productVersion = "0.1.0-feature1"
+	productVersion = "v0.1.0-feature1"
 	productInternalPort = "9999"
 	productExternalPort = "30999"
 	productK8SmanifestsFolder = "k8s/manifests"
@@ -68,9 +71,11 @@ jar {
 docker {
 	name "${productName}:${productVersion}"
 	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
-	buildArgs([PRODUCT_NAME:"${project.name}",PRODUCT_VERSION:"${productVersion}"])
+	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}"])
 	files jar.outputs
 	copySpec.into("build/libs")
+//	pull true
+//	noCache true
 }
 
 // Give an alias to docker task
@@ -98,8 +103,14 @@ helm {
 	home = file("$System.env.HOME/.helm")
 	debug = true
 
+	filtering {
+		// This value will be resolvable in all charts' YAML files as ${authorName}
+		values.put 'imageTag',"${productVersion}"
+	}
+
 	charts {
 		echofe {
+			chartVersion = "${productVersion}"
 			sourceDir = file("${productK8ShelmChartsFolder}/${productName}")
 		}
 	}
@@ -114,7 +125,10 @@ helm {
 	releases {
 		echofe {
 			from charts.echofe
+//			version = "${productVersion}"
 			purge = true
+			// pass values (like --set on the command line)
+//			values = ['image.tag':"${productVersion}"]
 		}
 	}
 }
