@@ -153,7 +153,7 @@ def manifestVersion() {
 //	return "${details.lastTag}-${details.branchName}"
 	
 	// An alternative
-	return "v0.1.0-${details.branchName}"
+	return "v0.1.0-demo4echo+${details.branchName}"
 
 //	println "last tag is: ${details.lastTag}"
 //	println "commitDistance is: ${details.commitDistance}"
