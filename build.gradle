@@ -145,7 +145,10 @@ task helmUninstall(dependsOn: 'helmDelete')
 def manifestVersion() {
 	def details = versionDetails()
 
+	// This doesn't work under Jenkins as it doesn't fetch the tags
 //	return "${details.lastTag}-${details.branchName}"
+	
+	// An alternative
 	return "v0.1.0-${details.branchName}"
 
 //	println "last tag is: ${details.lastTag}"
