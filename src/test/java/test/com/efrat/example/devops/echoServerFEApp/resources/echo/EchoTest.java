@@ -25,7 +25,8 @@ public class EchoTest
 {
 	// Need to take this externally to a file
 //	public static final String BASE_URI = "http://192.168.99.100:9999";
-	public static final String BASE_URI = "http://192.168.99.100:30999";
+//	public static final String BASE_URI = "http://192.168.99.100:30999";
+	public static final String BASE_URI = "http://192.168.99.100";
 
 	/**
 	 * @throws java.lang.Exception
@@ -65,7 +66,7 @@ public class EchoTest
 	@Test
 	public final void testGetEcho() 
 	{
-		String paramForTest = "Tiran";
+		String paramForTest = "Golan";
 		
 		WebTarget target = ClientBuilder
 				.newClient()

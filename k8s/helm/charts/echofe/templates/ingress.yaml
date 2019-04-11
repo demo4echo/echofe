@@ -3,7 +3,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-ingress
   labels:
     app.kubernetes.io/name: {{ include "echofe.name" . }}
     helm.sh/chart: {{ include "echofe.chart" . }}
@@ -36,7 +36,7 @@ spec:
         {{- range .paths }}
           - path: {{ . }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $fullName }}-service
               servicePort: http
         {{- end }}
   {{- end }}
