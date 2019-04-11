@@ -26,7 +26,7 @@ public class EchoTest
 	// Need to take this externally to a file
 //	public static final String BASE_URI = "http://192.168.99.100:9999";
 //	public static final String BASE_URI = "http://192.168.99.100:30999";
-	public static final String BASE_URI = "http://192.168.99.100";
+	public static final String BASE_URI = "http://192.168.99.100"; // in case an Ingress is in place 
 
 	/**
 	 * @throws java.lang.Exception
