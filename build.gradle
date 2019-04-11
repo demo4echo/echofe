@@ -131,7 +131,10 @@ helm {
 		echofe {
 			from charts.echofe
 			purge = true
-
+			
+			// If true, perform a dry run 
+//			dryRun = true
+			
 			// pass values (like --set on the command line)
 //			values = ['image.tag':"${productVersion}"]
 

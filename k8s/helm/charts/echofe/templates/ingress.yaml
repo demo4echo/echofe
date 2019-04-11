@@ -26,8 +26,12 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
+  {{- if ne .host "chart-example.local" }}
     - host: {{ .host | quote }}
       http:
+  {{- else }}
+    - http:
+  {{- end }}
         paths:
         {{- range .paths }}
           - path: {{ . }}

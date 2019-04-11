@@ -44,7 +44,7 @@ spec:
 #apiVersion: extensions/v1beta1
 #kind: Ingress
 #metadata:
-#  name: echo-ingress
+#  name: echofe-ingress
 #  annotations:
 #    nginx.ingress.kubernetes.io/rewrite-target: /
 #spec:
