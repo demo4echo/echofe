@@ -143,6 +143,10 @@ helm {
 
 task helmUninstall(dependsOn: 'helmDelete')
 
+// Notes:
+// 1. helmPackge and helmInstall tasks are used as is
+// 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
+
 //
 // The function builds a proper version name
 //
@@ -162,10 +166,6 @@ def manifestVersion() {
 //	println "branchName is: ${details.branchName}" // is null if the repository in detached HEAD mode
 //	println "isCleanTag is: ${details.isCleanTag}"	
 }
-
-// Notes:
-// 1. helmPackge and helmInstall tasks are used as is
-// 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
 
 description = 'The Echo Frontend demo product'
 version = "${productVersion}"
