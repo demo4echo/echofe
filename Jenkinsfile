@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-		cloud 'kubernetes'
+		cloud 'kubernetes1'
 //		cloud readProperties(interpolate:true,file:'EnvFile.properties').ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'

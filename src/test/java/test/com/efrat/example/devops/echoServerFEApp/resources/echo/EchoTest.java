@@ -66,7 +66,7 @@ public class EchoTest
 	@Test
 	public final void testGetEcho() 
 	{
-		System.out.println("We got this system property: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
+		System.out.println("com.efrat.echofe.serviceEndPoint system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
 
 		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
 		String paramForTest = "Golan";
