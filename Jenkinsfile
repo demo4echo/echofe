@@ -1,8 +1,8 @@
 pipeline {
   agent {
     kubernetes {
-//		cloud 'development'
-		cloud getCloudName()
+		cloud 'development'
+//		cloud getCloudName()
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
@@ -61,7 +61,7 @@ def getCloudName() {
 //	node('jenkins-slave-pod-agent') {
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 
-		println "We got: [ " + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 	}
 }
