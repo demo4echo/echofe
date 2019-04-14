@@ -60,6 +60,7 @@ def getCloudName() {
 	node('master') { //jenkins-slave-pod-agent
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 
+		println "We got: [ " + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 	}
 }
