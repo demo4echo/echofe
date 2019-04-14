@@ -69,6 +69,15 @@ jar {
 	}
 }
 
+// Make prints in tests visible
+test {
+	testLogging {
+		outputs.upToDateWhen {false}
+		showStandardStreams = true
+		systemProperties = System.properties
+	}
+}
+
 //
 // docker
 //

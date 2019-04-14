@@ -66,11 +66,14 @@ public class EchoTest
 	@Test
 	public final void testGetEcho() 
 	{
+//		System.out.println("We got: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
+
+		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
 		String paramForTest = "Golan";
 		
 		WebTarget target = ClientBuilder
 				.newClient()
-        		.target(BASE_URI)
+        		.target(baseURI)
         		.path(EchoResource.SELF_PATH)
         		.queryParam("what",paramForTest);
         		
