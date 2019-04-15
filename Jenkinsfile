@@ -96,7 +96,7 @@ def assimilateEnvironmentVariables() {
 
 		def myKey = "tiran"
 		environment {
-			myKey = "golan"
+			("${myKey}".toString()) = "golan"
 		}
 		println "We see .tiran as: [" + env.tiran + "] and .myKey as: [" + env.myKey + "]"
 
