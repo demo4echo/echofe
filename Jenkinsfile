@@ -100,7 +100,7 @@ def assimilateEnvironmentVariables() {
 //		}
 
 		env."${myKey}" = golan
-		println "We see .tiran as: [" + env.tiran + "] and .myKey as: [" + env.myKey + "]"
+		println "We see .tiran as: [" + env.tiran + "] and .myKey as: [ + env.myKey + ]"
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 //		props.each {
