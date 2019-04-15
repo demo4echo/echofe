@@ -109,6 +109,8 @@ def getCloudName() {
 //	node('master') {
 //	node('jenkins-slave-pod-agent') {
 	node {
+		println "Going to sleep"
+		sleep(60000)
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 
 		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
