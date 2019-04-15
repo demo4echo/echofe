@@ -1,11 +1,12 @@
 pipeline {
    environment { 
-	   CC = 'clang'
+	   ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = 'development'
 	}
 	agent {
     kubernetes {
-		cloud 'development'
+//		cloud 'development'
 //		cloud getCloudName()
+		cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
@@ -14,7 +15,6 @@ pipeline {
   stages {
     stage('build') {
       steps {
-   		echo "CC is: $env.CC" 
      		sh './gradlew dockerBuildAndPublish --no-daemon'
       }
     }
