@@ -6,7 +6,7 @@ pipeline {
     kubernetes {
 //		cloud 'development'
 //		cloud getCloudName()
-		cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+		cloud "${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}"
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
