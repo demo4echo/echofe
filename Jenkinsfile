@@ -22,6 +22,7 @@ pipeline {
 	      defaultContainer 'jdk-gradle-docker-k8s'
 	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 	    }
+	   }
       steps {
 			script {
 				def cloudName = cloud getCloudName()
@@ -38,6 +39,7 @@ pipeline {
 	      defaultContainer 'jdk-gradle-docker-k8s'
 	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 	    }
+	   }
       steps {
      		sh './gradlew helmPackage --no-daemon'
       }
@@ -50,6 +52,7 @@ pipeline {
 	      defaultContainer 'jdk-gradle-docker-k8s'
 	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 	    }
+	   }
       steps {
      		sh './gradlew helmInstall --no-daemon'
       }
@@ -62,11 +65,20 @@ pipeline {
 	      defaultContainer 'jdk-gradle-docker-k8s'
 	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 	    }
+	   }
       steps {
      		sh './gradlew test --no-daemon'
       }
     }
     stage('uninstall') {
+		agent {
+	    kubernetes {
+			cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+			label 'jenkins-slave-pod-agent'
+	      defaultContainer 'jdk-gradle-docker-k8s'
+	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+	    }
+	   }
       steps {
      		sh './gradlew helmUninstall --no-daemon'
       }
