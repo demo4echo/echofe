@@ -56,7 +56,7 @@ pipeline {
 }
 
 def resolveCloudName() {
-//	node {
+	node {
 
 //		println "This is the SCM: [${scm.GIT_COMMIT}]" => not permitted
 //		def scmVars = checkout(scm)
@@ -73,7 +73,7 @@ def resolveCloudName() {
 //		return resolveCloudNameByBranchName()
 //		return assimilateEnvironmentVariables()
 		return null
-//	}
+	}
 }
 
 def resolveCloudNameByBranchName() {
