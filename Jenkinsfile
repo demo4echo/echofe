@@ -8,27 +8,27 @@ pipeline {
 		}
 	}
 	stages {
-		stage('build') {
+		stage('\u2776 build') {
 			steps {
 				sh './gradlew dockerBuildAndPublish --no-daemon'
 			}
 		}
-		stage('package') {
+		stage('\u2777 package') {
 			steps {
 				sh './gradlew helmPackage --no-daemon'
 			}
 		}
-		stage('install') {
+		stage('\u2778 install') {
 			steps {
 				sh './gradlew helmInstall --no-daemon'
 			}
 		}
-		stage('test') {
+		stage('\u2779 test') {
 			steps {
 				sh './gradlew test --no-daemon'
 			}
 		}
-		stage('uninstall') {
+		stage('\u2780 uninstall') {
 			steps {
 				sh './gradlew helmUninstall --no-daemon'
 			}
@@ -62,7 +62,7 @@ def resolveCloudName() {
 //		def scmVars = checkout(scm)
 //		println "Git commit is:[${scmVars.GIT_COMMIT}]"
 //		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
-//		shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+//		def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 	
 		// We are missing the commit ID from Jenkins!!!	
 //		sh(returnStdout: true, script: 'git show e812e5a0546c325a9ecdf0ce4b247657050c01af:EnvFile.properties > EnvFile.properties')
