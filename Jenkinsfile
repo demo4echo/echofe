@@ -1,5 +1,8 @@
 pipeline {
-  agent {
+   environment { 
+	   CC = 'clang'
+	}
+	agent {
     kubernetes {
 		cloud 'development'
 //		cloud getCloudName()
@@ -11,6 +14,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
+   		echo "CC is: $env.CC" 
      		sh './gradlew dockerBuildAndPublish --no-daemon'
       }
     }
@@ -19,7 +23,7 @@ pipeline {
      		sh './gradlew helmPackage --no-daemon'
       }
     }
-    stage('install') {
+	 stage('install') {
       steps {
      		sh './gradlew helmInstall --no-daemon'
       }
