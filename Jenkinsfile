@@ -107,7 +107,7 @@ def assimilateEnvironmentVariables() {
 			key,value -> env."${key}" = "${value}" 
 		}
 		
-//		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 //		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 		return null
 //		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
