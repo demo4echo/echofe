@@ -110,7 +110,7 @@ def getCloudName() {
 //	node('jenkins-slave-pod-agent') {
 	node {
 		println "Branch name is:[${BRANCH_NAME}]"
-		println "Change ID is:[${CHANGE_ID}]"
+//		println "Change ID is:[${CHANGE_ID}]"
 //		def commitHash = checkout(scm).GIT_COMMIT
 //		println "Git commit is:[${checkout(scm).GIT_COMMIT}]"
 //		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
