@@ -94,7 +94,7 @@ def assimilateEnvironmentVariables() {
 	node {
 		checkout(scm)
 
-//		def myKey = "tiran"
+		def myKey = "tiran"
 //		environment {
 //			("${myKey}".toString()) = "golan"
 //		}
