@@ -4,8 +4,8 @@ pipeline {
 //	}
 	agent {
     kubernetes {
-//		cloud 'development'
-		cloud getCloudName()
+		cloud 'development'
+//		cloud getCloudName()
 //		cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
@@ -15,6 +15,10 @@ pipeline {
   stages {
     stage('build') {
       steps {
+			script {
+				def cloudName = cloud getCloudName()
+			   println "Cloud name is: ${cloudName}"
+			}
      		sh './gradlew dockerBuildAndPublish --no-daemon'
       }
     }
