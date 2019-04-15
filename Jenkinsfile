@@ -7,9 +7,9 @@ pipeline {
 			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 		}
 	}
-	environment {
-		ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = getCloudName()
-	}
+//	environment {
+//		ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = getCloudName()
+//	}
 	stages {
 		stage('build') {
 			steps {
@@ -61,7 +61,7 @@ pipeline {
 def resolveCloudName() {
 	node {
 		println "Branch name is: [${env.BRANCH_NAME}]"
-		println "This is the SCM: [${scm}]"
+		println "This is the SCM: [${scm.GIT_COMMIT}]"
 //		def scmVars = checkout(scm)
 //		println "Git commit is:[${scmVars.GIT_COMMIT}]"
 //		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
