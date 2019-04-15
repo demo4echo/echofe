@@ -1,9 +1,11 @@
 pipeline {
-   environment { 
+   environment {
+   	print "In Environment" 
 	   ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = 'development'
 	}
 	agent {
     kubernetes {
+   	print "In Agent" 
 //		cloud 'development'
 //		cloud getCloudName()
 		cloud "${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}"
