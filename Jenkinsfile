@@ -96,7 +96,7 @@ def assimilateEnvironmentVariables() {
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
-			key,value -> env[${key}] = ${value} 
+			key,value -> env["${key}"] = ${value} 
 		}
 		
 		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
