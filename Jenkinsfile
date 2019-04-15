@@ -10,7 +10,6 @@ pipeline {
 	stages {
 		stage('build') {
 			steps {
-				echo "The value of ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME is: ${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}"
 				sh './gradlew dockerBuildAndPublish --no-daemon'
 			}
 		}
