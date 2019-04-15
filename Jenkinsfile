@@ -74,9 +74,9 @@ def resolveCloudName() {
 //		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 //		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 
-		if (${BRANCH_NAME} == 'master') {
+		if (BRANCH_NAME == 'master') {
 			return 'production'
-		} else if (${BRANCH_NAME} == 'integration') {                 
+		} else if (BRANCH_NAME == 'integration') {                 
 			return 'staging'
 		}
 		else {
