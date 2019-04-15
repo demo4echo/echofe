@@ -7,6 +7,9 @@ pipeline {
 			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 		}
 	}
+	options { 
+		timestamps() 
+	}
 	stages {
 		stage('\u2776 build') {
 			steps {
@@ -93,7 +96,13 @@ def resolveCloudNameByBranchName() {
 
 def assimilateEnvironmentVariables() {
 	node {
-		checkout(scm)
+		// Fetch the complete repository
+//		checkout(scm)
+
+		// Fetch only the target file by locating the commit ID
+		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
+		println "Git commit ID is:[${commitId}]"
+		sh(returnStdout: true, script: 'git show ${commitId}:EnvFile.properties > EnvFile.properties')
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
