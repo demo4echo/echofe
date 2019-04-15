@@ -1,7 +1,6 @@
 pipeline {
-//   environment {
-//	   ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = 'development'
-//	}
+	agent none
+/*
 	agent {
     kubernetes {
 		cloud 'development'
@@ -10,10 +9,20 @@ pipeline {
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
-    }
+    }*/
+   environment {
+	   ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = getCloudName()
+	}
   }
   stages {
     stage('build') {
+		agent {
+	    kubernetes {
+			cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+			label 'jenkins-slave-pod-agent'
+	      defaultContainer 'jdk-gradle-docker-k8s'
+	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+	    }
       steps {
 			script {
 				def cloudName = cloud getCloudName()
@@ -23,16 +32,37 @@ pipeline {
       }
     }
     stage('package') {
+		agent {
+	    kubernetes {
+			cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+			label 'jenkins-slave-pod-agent'
+	      defaultContainer 'jdk-gradle-docker-k8s'
+	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+	    }
       steps {
      		sh './gradlew helmPackage --no-daemon'
       }
     }
 	 stage('install') {
+		agent {
+	    kubernetes {
+			cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+			label 'jenkins-slave-pod-agent'
+	      defaultContainer 'jdk-gradle-docker-k8s'
+	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+	    }
       steps {
      		sh './gradlew helmInstall --no-daemon'
       }
     }
     stage('test') {
+		agent {
+	    kubernetes {
+			cloud env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+			label 'jenkins-slave-pod-agent'
+	      defaultContainer 'jdk-gradle-docker-k8s'
+	      yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+	    }
       steps {
      		sh './gradlew test --no-daemon'
       }
@@ -67,10 +97,10 @@ pipeline {
 def getCloudName() {
 //	node('master') {
 //	node('jenkins-slave-pod-agent') {
-//	node {
+	node {
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 
 		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
-//	}
+	}
 }
