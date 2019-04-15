@@ -70,7 +70,8 @@ def resolveCloudName() {
 		// We are missing the commit ID from Jenkins!!!	
 //		sh(returnStdout: true, script: 'git show e812e5a0546c325a9ecdf0ce4b247657050c01af:EnvFile.properties > EnvFile.properties')
 		
-		return resolveCloudNameByBranchName()
+//		return resolveCloudNameByBranchName()
+		return assimilateEnvironmentVariables()
 //	}
 }
 
@@ -89,18 +90,18 @@ def resolveCloudNameByBranchName() {
 	}
 }
 
-//def assimilateEnvironmentVariables() {
-//	node {
-//		checkout(scm)
+def assimilateEnvironmentVariables() {
+	node {
+		checkout(scm)
 
-//		def props = readProperties interpolate: true, file: 'EnvFile.properties'
-//		props.each {
-//			key,value -> env.${key} = ${value} 
-//		}
+		def props = readProperties interpolate: true, file: 'EnvFile.properties'
+		props.each {
+			key,value -> env[${key}] = ${value} 
+		}
 		
-//		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
-//		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 //		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 //		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
-//	}
-//}
+	}
+}
