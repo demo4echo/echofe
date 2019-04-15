@@ -60,7 +60,8 @@ pipeline {
 
 def resolveCloudName() {
 	node {
-		println "Branch name is:[${BRANCH_NAME}]"
+		println "Branch name is: [${env.BRANCH_NAME}]"
+		println "This is the SCM: [${scm}]"
 //		def scmVars = checkout(scm)
 //		println "Git commit is:[${scmVars.GIT_COMMIT}]"
 //		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
@@ -74,9 +75,9 @@ def resolveCloudName() {
 //		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 //		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 
-		if (BRANCH_NAME == 'master') {
+		if (env.BRANCH_NAME == 'master') {
 			return 'production'
-		} else if (BRANCH_NAME == 'integration') {                 
+		} else if (env.BRANCH_NAME == 'integration') {                 
 			return 'staging'
 		}
 		else {
