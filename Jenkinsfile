@@ -7,12 +7,10 @@ pipeline {
 			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
 		}
 	}
-//	environment {
-//		ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = getCloudName()
-//	}
 	stages {
 		stage('build') {
 			steps {
+				echo "The value of ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME is: ${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}"
 				sh './gradlew dockerBuildAndPublish --no-daemon'
 			}
 		}
@@ -94,23 +92,13 @@ def assimilateEnvironmentVariables() {
 	node {
 		checkout(scm)
 
-		def myKey = "tiran"
-//		environment {
-//			("${myKey}".toString()) = "golan"
-//		}
-
-		env."${myKey}" = "golan"
-		println "We see .tiran as: [" + env.tiran + "] and .myKey as: [ + env.myKey + ]"
-
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
 			key,value -> env."${key}" = "${value}" 
 		}
 		
-		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
-//		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
-		return null
-//		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
-//		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+		println "Cloud name is: [${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}]"
+
+		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 	}
 }
