@@ -94,10 +94,12 @@ def assimilateEnvironmentVariables() {
 	node {
 		checkout(scm)
 
-		def myKey = "tiran"
-		environment {
-			("${myKey}".toString()) = "golan"
-		}
+//		def myKey = "tiran"
+//		environment {
+//			("${myKey}".toString()) = "golan"
+//		}
+
+		env."${myKey}" = golan
 		println "We see .tiran as: [" + env.tiran + "] and .myKey as: [" + env.myKey + "]"
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
