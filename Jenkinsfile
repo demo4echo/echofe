@@ -1,14 +1,14 @@
 pipeline {
    environment {
-   	print "In Environment" 
+   	echo "In Environment" 
 	   ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = 'development'
 	}
 	agent {
     kubernetes {
-   	print "In Agent" 
+   	echo "In Agent" 
 //		cloud 'development'
 //		cloud getCloudName()
-		cloud "${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}"
+		cloud "$ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME"
 		label 'jenkins-slave-pod-agent'
       defaultContainer 'jdk-gradle-docker-k8s'
       yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
