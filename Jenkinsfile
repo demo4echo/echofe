@@ -73,8 +73,8 @@ def resolveCloudName() {
 //		println "Git commit 1 is:[${GIT_COMMIT}]"
 //		println "Git commit 2 is:[${env.GIT_COMMIT}]"
 		
-		return resolveCloudNameByBranchName()
-//		return assimilateEnvironmentVariables()
+//		return resolveCloudNameByBranchName()
+		return assimilateEnvironmentVariables()
 //		return null
 	}
 }
