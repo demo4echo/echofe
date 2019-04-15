@@ -1,11 +1,9 @@
 pipeline {
    environment {
-   	echo "In Environment" 
 	   ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = 'development'
 	}
 	agent {
     kubernetes {
-   	echo "In Agent" 
 //		cloud 'development'
 //		cloud getCloudName()
 		cloud "$ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME"
