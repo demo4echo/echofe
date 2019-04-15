@@ -110,7 +110,7 @@ def getCloudName() {
 //	node('jenkins-slave-pod-agent') {
 	node {
 		println "Branch name is:[${BRANCH_NAME}]"
-		println "Git commit is:[${GIT_COMMIT}]"
+		println "Git commit is:[${env.GIT_COMMIT}]"
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 
