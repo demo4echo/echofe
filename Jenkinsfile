@@ -73,8 +73,8 @@ def resolveCloudName() {
 //		println "Git commit 1 is:[${GIT_COMMIT}]"
 //		println "Git commit 2 is:[${env.GIT_COMMIT}]"
 		
-//		return resolveCloudNameByBranchName()
-		return assimilateEnvironmentVariables()
+		return resolveCloudNameByBranchName()
+//		return assimilateEnvironmentVariables()
 //		return null
 	}
 }
@@ -97,12 +97,12 @@ def resolveCloudNameByBranchName() {
 def assimilateEnvironmentVariables() {
 	node {
 		// Fetch the complete repository
-//		checkout(scm)
+		checkout(scm)
 
 		// Fetch only the target file by locating the commit ID
-		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
-		println "Git commit ID is:[${commitId}]"
-		sh(returnStdout: true, script: 'git show ${commitId}:EnvFile.properties > EnvFile.properties')
+//		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
+//		println "Git commit ID is:[${commitId}]"
+//		sh(returnStdout: true, script: 'git show ${commitId}:EnvFile.properties > EnvFile.properties')
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
