@@ -99,7 +99,7 @@ def assimilateEnvironmentVariables() {
 //			("${myKey}".toString()) = "golan"
 //		}
 
-		env."${myKey}" = golan
+		env."${myKey}" = "golan"
 		println "We see .tiran as: [" + env.tiran + "] and .myKey as: [ + env.myKey + ]"
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
@@ -107,7 +107,7 @@ def assimilateEnvironmentVariables() {
 //			key,value -> env["${key}"] = ${value} 
 //		}
 		
-		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+//		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 //		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 		return null
 //		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
