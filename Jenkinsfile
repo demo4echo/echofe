@@ -89,18 +89,18 @@ def resolveCloudNameByBranchName() {
 	}
 }
 
-def assimilateEnvironmentVariables() {
-	node {
-		checkout(scm)
+//def assimilateEnvironmentVariables() {
+//	node {
+//		checkout(scm)
 
-		def props = readProperties interpolate: true, file: 'EnvFile.properties'
-		props.each {
-			key,value -> env.${key} = ${value} 
-		}
+//		def props = readProperties interpolate: true, file: 'EnvFile.properties'
+//		props.each {
+//			key,value -> env.${key} = ${value} 
+//		}
 		
-		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
-		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+//		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+//		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 //		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
 //		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
-	}
-}
+//	}
+//}
