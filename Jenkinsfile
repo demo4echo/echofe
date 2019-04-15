@@ -5,6 +5,7 @@ pipeline {
 			label 'jenkins-slave-pod-agent'
 			defaultContainer 'jdk-gradle-docker-k8s'
 			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+		}
 	}
 	environment {
 		ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME = getCloudName()
