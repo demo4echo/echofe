@@ -67,8 +67,8 @@ def resolveCloudName() {
 		// We are missing the commit ID from Jenkins!!!	
 //		sh(returnStdout: true, script: 'git show e812e5a0546c325a9ecdf0ce4b247657050c01af:EnvFile.properties > EnvFile.properties')
 		
-//		return resolveCloudNameByBranchName()
-		return assimilateEnvironmentVariables()
+		return resolveCloudNameByBranchName()
+//		return assimilateEnvironmentVariables()
 //	}
 }
 
