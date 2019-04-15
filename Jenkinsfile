@@ -109,7 +109,7 @@ def getCloudName() {
 //	node('master') {
 //	node('jenkins-slave-pod-agent') {
 	node {
-		println "Branch name is:["  + ${BRANCH_NAME} + "]"
+		println "Branch name is:[${BRANCH_NAME}]"
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 
