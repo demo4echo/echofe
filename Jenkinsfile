@@ -59,21 +59,24 @@ pipeline {
 }
 
 def resolveCloudName() {
-	node {
-		println "Branch name is: [${env.BRANCH_NAME}]"
-		println "This is the SCM: [${scm.GIT_COMMIT}]"
+//	node {
+
+//		println "This is the SCM: [${scm.GIT_COMMIT}]" => not permitted
 //		def scmVars = checkout(scm)
 //		println "Git commit is:[${scmVars.GIT_COMMIT}]"
 //		def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
 //		shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 	
-		// WE are missing the commit ID from Jenkins	
+		// We are missing the commit ID from Jenkins!!!	
 //		sh(returnStdout: true, script: 'git show e812e5a0546c325a9ecdf0ce4b247657050c01af:EnvFile.properties > EnvFile.properties')
 		
-//		checkout(scm)
-//		def props = readProperties interpolate: true, file: 'EnvFile.properties'
-//		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
-//		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+		return resolveCloudNameByBranchName()
+//	}
+}
+
+def resolveCloudNameByBranchName() {
+	node {
+		println "Branch name is: [${env.BRANCH_NAME}]"
 
 		if (env.BRANCH_NAME == 'master') {
 			return 'production'
@@ -83,5 +86,21 @@ def resolveCloudName() {
 		else {
 			return 'development'		    
 		}
+	}
+}
+
+def assimilateEnvironmentVariables() {
+	node {
+		checkout(scm)
+
+		def props = readProperties interpolate: true, file: 'EnvFile.properties'
+		props.each {
+			key,value -> env.${key} = ${value} 
+		}
+		
+		println "We got: [" + env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+//		println "We got: [" + props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME + "]"
+//		return props.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
 	}
 }
