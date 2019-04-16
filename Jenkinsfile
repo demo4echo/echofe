@@ -11,11 +11,12 @@ pipeline {
 		timestamps() 
 	}
 	environment {
-		tiran()
+		DUMMY_ENV_VAR = assimilateEnvironmentVariables()
 	}
 	stages {
 		stage('\u2776 build') {
 			steps {
+				echo "We have the following for cloud name: [${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}]"
 				sh './gradlew dockerBuildAndPublish --no-daemon'
 			}
 		}
@@ -61,10 +62,6 @@ pipeline {
   	}
 }
 
-def tiran() {
-	println 'Hello World'		    
-}
-
 def resolveCloudName() {
 	node {
 
@@ -91,7 +88,7 @@ def resolveCloudNameByBranchName() {
 
 def assimilateEnvironmentVariables() {
 	node {
-		checkout(scm)
+//		checkout(scm)
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
