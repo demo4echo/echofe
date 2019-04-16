@@ -35,7 +35,7 @@ pipeline {
 				sh './gradlew test --no-daemon'
 			}
 		}
-		stage('\u2780 uninstall') {
+		stage('\u277A uninstall') {
 			steps {
 				sh './gradlew helmUninstall --no-daemon'
 			}
