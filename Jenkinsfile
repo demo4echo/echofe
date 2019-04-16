@@ -11,9 +11,7 @@ pipeline {
 		timestamps() 
 	}
 	environment {
-		script {
-			println 'Hello World'		    
-		}
+		tiran()
 	}
 	stages {
 		stage('\u2776 build') {
@@ -61,6 +59,10 @@ pipeline {
       	echo 'Things were different before...'
     	}
   	}
+}
+
+def tiran() {
+	println 'Hello World'		    
 }
 
 def resolveCloudName() {
