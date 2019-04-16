@@ -15,27 +15,27 @@ pipeline {
 		X_MAVENIR_ECHO_ECHOFE_DUMMY_ENV_VAR = assimilateEnvironmentVariables()
 	}
 	stages {
-		stage('\u2776 build') {
+		stage('\u2776 build \u1F6E0') {//2692
 			steps {
 				sh './gradlew dockerBuildAndPublish --no-daemon'
 			}
 		}
-		stage('\u2777 package') {
+		stage('\u2777 package \u1F4E6') {
 			steps {
 				sh './gradlew helmPackage --no-daemon'
 			}
 		}
-		stage('\u2778 install') {
+		stage('\u2778 install \u1F3F4') {
 			steps {
 				sh './gradlew helmInstall --no-daemon'
 			}
 		}
-		stage('\u2779 test') {
+		stage('\u2779 test \u1F321') {//2696
 			steps {
 				sh './gradlew test --no-daemon'
 			}
 		}
-		stage('\u277A uninstall') {
+		stage('\u277A uninstall \u1F3F3') {
 			steps {
 				sh './gradlew helmUninstall --no-daemon'
 			}
