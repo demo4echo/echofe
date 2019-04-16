@@ -10,6 +10,11 @@ pipeline {
 	options { 
 		timestamps() 
 	}
+	environment {
+		script {
+			printkn 'Hello World'		    
+		}
+	}
 	stages {
 		stage('\u2776 build') {
 			steps {
