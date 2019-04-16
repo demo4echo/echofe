@@ -12,7 +12,7 @@ pipeline {
 	}
 	environment {
 		script {
-			printkn 'Hello World'		    
+			println 'Hello World'		    
 		}
 	}
 	stages {
