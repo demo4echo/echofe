@@ -1,7 +1,7 @@
 pipeline {
 	agent {
 		kubernetes {
-			cloud resolveCloudName()
+			cloud resolveCloudNameByBranchName()
 			label 'jenkins-slave-pod-agent'
 			defaultContainer 'jdk-gradle-docker-k8s'
 			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
@@ -11,12 +11,13 @@ pipeline {
 		timestamps() 
 	}
 	environment {
-		DUMMY_ENV_VAR = assimilateEnvironmentVariables()
+		// We use this dummy environment variable to load all the properties from the designated file into environment variable (per brach) 
+		X_MAVENIR_ECHO_ECHOFE_DUMMY_ENV_VAR = assimilateEnvironmentVariables()
+		X_MAVENIR_ECHO_ECHOFE_DUMMY_ENV_VAR = null
 	}
 	stages {
 		stage('\u2776 build') {
 			steps {
-				echo "We have the following for cloud name: [${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}]"
 				sh './gradlew dockerBuildAndPublish --no-daemon'
 			}
 		}
@@ -62,15 +63,7 @@ pipeline {
   	}
 }
 
-def resolveCloudName() {
-	node {
-
-		return resolveCloudNameByBranchName()
-//		return assimilateEnvironmentVariables()
-//		return null
-	}
-}
-
+// Determine the applicable k8s cloud (towards Jenkins' configuration of the K8S plugin)
 def resolveCloudNameByBranchName() {
 	node {
 		println "Branch name is: [${env.BRANCH_NAME}]"
@@ -86,9 +79,10 @@ def resolveCloudNameByBranchName() {
 	}
 }
 
+// Load all the properties in the per brnach designated file as environment variables
 def assimilateEnvironmentVariables() {
 	node {
-//		checkout(scm)
+//		checkout(scm) => don't need it as we'll call the function after the repository has been fetched (checkout(scm) is called in the 'agent' phase)
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
