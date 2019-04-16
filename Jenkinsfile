@@ -13,7 +13,6 @@ pipeline {
 	environment {
 		// We use this dummy environment variable to load all the properties from the designated file into environment variable (per brach) 
 		X_MAVENIR_ECHO_ECHOFE_DUMMY_ENV_VAR = assimilateEnvironmentVariables()
-		X_MAVENIR_ECHO_ECHOFE_DUMMY_ENV_VAR = null
 	}
 	stages {
 		stage('\u2776 build') {
