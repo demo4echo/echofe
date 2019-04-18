@@ -11,7 +11,8 @@ pipeline {
 		timestamps() 
 	}
 	environment {
-		// We use this dummy environment variable to load all the properties from the designated file into environment variable (per brach) 
+		// We use this dummy environment variable to load all the properties from the designated file into environment variable (per brach)
+		// This is a pseudo comment
 		X_EFRAT_ECHO_ECHOFE_DUMMY_ENV_VAR = assimilateEnvironmentVariables()
 	}
 	stages {
