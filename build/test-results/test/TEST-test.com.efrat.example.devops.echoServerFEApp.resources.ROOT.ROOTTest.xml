@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test.com.efrat.example.devops.echoServerFEApp.resources.ROOT.ROOTTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-04-16T17:08:23" hostname="IL-TLV-TMELTSE4" time="0.047">
+  <properties/>
+  <testcase name="testGetROOT" classname="test.com.efrat.example.devops.echoServerFEApp.resources.ROOT.ROOTTest" time="0.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
