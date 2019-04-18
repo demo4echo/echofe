@@ -1,8 +1,0 @@
-apiVersion: v1
-name: echofe
-version: v0.1.0-demo4echo.feature1
-description: A Helm chart for demo app named Echo FE
-appVersion: v0.1.0-demo4echo.feature1
-maintainers:
-  - name: Tiran Meltser
-    email: tiran.meltser@mavenir.com
