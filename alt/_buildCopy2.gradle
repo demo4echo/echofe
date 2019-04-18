@@ -18,16 +18,18 @@ plugins
 	// gradle-helm-plugin plugins
 	id 'org.unbroken-dome.helm' version '0.3.0'
 	id 'org.unbroken-dome.helm-releases' version '0.3.0'
-	
-	// gradle-jgitver-plugin pluin
-//	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
-	
-	// gradle-git-version plugin
-	id 'com.palantir.git-version' version '0.11.0'
+//	id 'org.unbroken-dome.helm-commands' version '0.3.0'
+//	id 'org.unbroken-dome.helm-publish' version '0.3.0'
 }
 
 dependencies
 {
+	// This dependency is exported to consumers, that is to say found on their compile classpath.
+//	api 'org.apache.commons:commons-math3:3.6.1'
+
+	// This dependency is used internally, and not exposed to consumers on their own compile classpath.
+//	implementation 'com.google.guava:guava:23.0'
+
 	// Use JUnit test framework
 	testImplementation 'junit:junit:4.12'
 
@@ -46,13 +48,10 @@ repositories
 
 // Adding some properties
 ext {
+//	serviceName = "demo-echo" 	// e.g. ucass-ap (for Nexus registry)
 	serviceName = "tmeltser"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
-//	productVersion = "v0.1.0-feature1"
-//	productVersion = gitVersion()
-	productVersion = manifestVersion()
-	productInternalPort = "9999"
-	productExternalPort = "30999"
+	productVersion = "1.0"
 	productK8SmanifestsFolder = "k8s/manifests"
 	productK8SsetupFile = "echofeManifest.yaml"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
@@ -60,21 +59,14 @@ ext {
 
 // Create an uber jar
 jar {
-	manifest	{
+	manifest
+	{
    	attributes "Main-Class": "com.efrat.example.devops.echoServerFEApp.EchoServerFEApp"
 	}
 
-	from	{
+	from
+	{
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-}
-
-// Make prints in tests visible
-test {
-	testLogging {
-		outputs.upToDateWhen {false}
-		showStandardStreams = true
-		systemProperties = System.properties
 	}
 }
 
@@ -84,12 +76,10 @@ test {
 
 docker {
 	name "${productName}:${productVersion}"
+//	tag "privateRegistry", "il-tlv-tmeltse4:18081/${serviceName}/${productName}:${productVersion}"
 	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
-	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}"])
 	files jar.outputs
 	copySpec.into("build/libs")
-//	pull true
-//	noCache true
 }
 
 // Give an alias to docker task
@@ -98,33 +88,45 @@ task dockerBuild(dependsOn: ['jar','docker'])
 dockerRun {
 	name "${productName}"
 	image "${productName}:${productVersion}"
-	ports "${productExternalPort}:${productInternalPort}"
+	ports '30999:9999'
 	daemonize true
 	clean true
 }
 
-// Main task used from docker plugins
 task dockerBuildAndPublish(dependsOn: 'dockerPushPrivateRegistry')
 
 // Give an alias to dockerRun task
 task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
 
 //
+// kubectl
+//
+
+task k8sDeploy(type:Exec) {
+//	dependsOn 'k8sBuild'
+	
+	executable "kubectl"
+	args "create","-f","${productK8SmanifestsFolder}/${productK8SsetupFile}"
+}
+
+task k8sUndeploy(type:Exec) {
+	executable "kubectl"
+	args "delete","-f","${productK8SmanifestsFolder}/${productK8SsetupFile}"
+}
+
+//
 // helm
 //
 
 helm {
+//	home = file("$buildDir/helm/home")
 	home = file("$System.env.HOME/.helm")
 	debug = true
 
-	filtering {
-		// This value will be resolvable in all charts' YAML files as ${authorName}
-		values.put 'imageTag',"${productVersion}"
-	}
-
 	charts {
 		echofe {
-			chartVersion = "${productVersion}"
+//			chartName = 'foo'
+//			chartVersion = '1.2.3'
 			sourceDir = file("${productK8ShelmChartsFolder}/${productName}")
 		}
 	}
@@ -139,16 +141,8 @@ helm {
 	releases {
 		echofe {
 			from charts.echofe
+//			from chart("${productName}")
 			purge = true
-			
-			// If true, perform a dry run 
-//			dryRun = true
-			
-			// pass values (like --set on the command line)
-//			values = ['image.tag':"${productVersion}"]
-
-			// If true, will wait until all Pods, PVCs, Services, and minimum number of Pods of a Deployment are in a ready state before marking the release as successful
-//			wait = true
 		}
 	}
 }
@@ -159,25 +153,5 @@ task helmUninstall(dependsOn: 'helmDelete')
 // 1. helmPackge and helmInstall tasks are used as is
 // 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
 
-//
-// The function builds a proper version name
-//
-def manifestVersion() {
-	def details = versionDetails()
-
-	// This doesn't work under Jenkins as it doesn't fetch the tags
-//	return "${details.lastTag}.${details.branchName}"
-	
-	// An alternative
-	return "v0.1.0-demo4echo.${details.branchName}"
-
-//	println "last tag is: ${details.lastTag}"
-//	println "commitDistance is: ${details.commitDistance}"
-//	println "gitHash is: ${details.gitHash}"
-//	println "gitHashFull is: ${details.gitHashFull}" // full 40-character Git commit hash
-//	println "branchName is: ${details.branchName}" // is null if the repository in detached HEAD mode
-//	println "isCleanTag is: ${details.isCleanTag}"	
-}
-
-description = 'The Echo Frontend demo product'
-version = "${productVersion}"
+description = 'A trivial Gradle build'
+version = '1.0'

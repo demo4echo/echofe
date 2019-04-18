@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test.com.efrat.example.devops.echoServerFEApp.resources.echo;
+package test.com.efrat.example.devops.echoServerFEApp.resources.ROOT;
 
 import static org.junit.Assert.*;
 
@@ -15,18 +15,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.efrat.example.devops.echoServerFEApp.resources.echo.EchoResource;
+import com.efrat.example.devops.echoServerFEApp.resources.ROOT.ROOTResource;
 
 /**
  * @author tmeltse
  *
  */
-public class EchoTest
+public class ROOTTest
 {
 	// Need to take this externally to a file
 //	public static final String BASE_URI = "http://192.168.99.100:9999";
-//	public static final String BASE_URI = "http://192.168.99.100:30999";
-	public static final String BASE_URI = "http://192.168.99.100"; // in case an Ingress is in place 
+	public static final String BASE_URI = "http://192.168.99.100:30999";
 
 	/**
 	 * @throws java.lang.Exception
@@ -61,24 +60,18 @@ public class EchoTest
 	}
 
 	/**
-	 * Test method for {@link com.efrat.example.devops.echoServerFEApp.resources.echo.EchoResource#getEcho(java.lang.String)}.
+	 * Test method for {@link com.efrat.example.devops.echoServerFEApp.resources.ROOT.ROOTResource#getROOT()}.
 	 */
 	@Test
-	public final void testGetEcho() 
+	public final void testGetROOT() 
 	{
-		System.out.println("com.efrat.echofe.serviceEndPoint system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
-
-		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
-		String paramForTest = "Golan";
-		
 		WebTarget target = ClientBuilder
 				.newClient()
-        		.target(baseURI)
-        		.path(EchoResource.SELF_PATH)
-        		.queryParam("what",paramForTest);
+        		.target(BASE_URI)
+        		.path(ROOTResource.SELF_PATH);
         		
 		String responseAsString = target.request(MediaType.TEXT_PLAIN).get(String.class);
         
-		assertEquals(paramForTest,responseAsString);
+		assertEquals(ROOTResource.GET_RESPONSE,responseAsString);
 	}
 }

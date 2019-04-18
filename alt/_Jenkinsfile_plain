@@ -1,0 +1,25 @@
+pipeline {
+  agent any
+  stages {
+    stage('build') {
+      steps {
+        sh './gradlew k8sBuild'
+      }
+    }
+    stage('deploy') {
+      steps {
+        sh './gradlew k8sDeploy'
+      }
+    }
+    stage('test') {
+      steps {
+        sh './gradlew test'
+      }
+    }
+    stage('undeploy') {
+      steps {
+        sh './gradlew k8sUndeploy'
+      }
+    }
+  }
+}
