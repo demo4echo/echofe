@@ -17,4 +17,4 @@ ENTRYPOINT ["java","-jar","./echofe.jar"]
 
 EXPOSE 9999
 
-LABEL maintainer="tiran.meltser@mavenir.com"
+LABEL maintainer="tiran.meltser@efrat.com"

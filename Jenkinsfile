@@ -3,8 +3,9 @@ pipeline {
 		kubernetes {
 			cloud resolveCloudNameByBranchName()
 			label 'jenkins-slave-pod-agent'
-			defaultContainer 'jdk-gradle-docker-k8s'
-			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+			defaultContainer 'jdk-gradle-docker-k8s-helm'
+//			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+			yaml constructJenkinsSlaveManifest()
 		}
 	}
 	options { 
@@ -93,8 +94,38 @@ def assimilateEnvironmentVariables() {
 			key,value -> env."${key}" = "${value}" 
 		}
 		
-		println "Cloud name is: [${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}]"
+		println "Cloud name is: [${env.JENKINS_SLAVE_K8S_DEPLOYMENT_CLOUD_NAME}]"
 
-		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
+		return env.JENKINS_SLAVE_K8S_DEPLOYMENT_CLOUD_NAME
+	}
+}
+
+//
+// Load, resolve and return the manifest of the designated jenkins slave to be used
+//
+def constructJenkinsSlaveManifest() {
+	node {
+		// Read the environement variables file	
+		def props = readProperties interpolate: true, file: 'EnvFile.properties'
+	
+		// Load the target manifest file
+//		String fileContents = new File('/path/to/file').getText('UTF-8')		
+		String manifestFileContent = new File(props."JENKINS_SLAVE_MANIFEST_FILE_NAME").text
+
+		// Define bindings		
+		def binding = [:]
+		props.each {
+			key,value -> binding."${key}" = "${value}" 
+		}
+		
+		// Resolve environement variables
+		def engine = new groovy.text.SimpleTemplateEngine()
+		def template = engine.createTemplate(manifestFileContent).make(binding)
+		
+		// Return the result
+		String resolvedJenkinsSlaveManifest = "'''\n" 
+		resolvedJenkinsSlaveManifest.concat(template.toString())
+		resolvedJenkinsSlaveManifest.concat("\n'''")
+		return resolvedJenkinsSlaveManifest
 	}
 }
