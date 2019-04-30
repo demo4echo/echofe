@@ -110,7 +110,8 @@ def constructJenkinsSlaveManifest() {
 	
 		// Load the target manifest file
 //		String fileContents = new File('/path/to/file').getText('UTF-8')		
-		String manifestFileContent = new File(props."JENKINS_SLAVE_MANIFEST_FILE_NAME").text
+//		String manifestFileContent = new File(props."JENKINS_SLAVE_MANIFEST_FILE_NAME").text
+		def manifestFileContent = readYaml file: props."JENKINS_SLAVE_MANIFEST_FILE_NAME"		
 
 		// Define bindings		
 		def binding = [:]
