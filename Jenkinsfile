@@ -85,7 +85,7 @@ def resolveCloudNameByBranchName() {
 // Load all the properties in the per brnach designated file as environment variables
 //
 def assimilateEnvironmentVariables() {
-	node(env.NODE_NAME) {
+//	node(env.NODE_NAME) {
 //		checkout(scm) => don't need it as we'll call the function after the repository has been fetched (checkout(scm) is called in the 'agent' phase)
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
@@ -96,5 +96,5 @@ def assimilateEnvironmentVariables() {
 		println "Cloud name is: [${env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME}]"
 
 		return env.ECHOFE_JENKINS_K8S_DEPLOYMENT_CLOUD_NAME
-	}
+//	}
 }
