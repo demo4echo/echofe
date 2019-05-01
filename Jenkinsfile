@@ -85,7 +85,7 @@ def resolveCloudNameByBranchName() {
 // Load all the properties in the per brnach designated file as environment variables
 //
 def assimilateEnvironmentVariables() {
-	node {
+	node('jenkins-slave-pod-agent') {
 //		checkout(scm) => don't need it as we'll call the function after the repository has been fetched (checkout(scm) is called in the 'agent' phase)
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
