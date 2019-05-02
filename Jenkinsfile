@@ -18,7 +18,7 @@ pipeline {
 	stages {
 		stage('\u2776 setup \u2728') {//\u1F4A1
 			steps {
-				sh 'cp -ar ./.dokcer /root/.docker'
+				sh 'cp -ar ./.docker /root/.docker'
 				sh 'cp -ar ./.kube /root/.kube'
 			}
 		}
@@ -119,7 +119,7 @@ def assimilateEnvironmentVariables() {
 			key,value -> env."${key}" = "${value}" 
 		}
 		
-		println "Cloud name is: [${env.JENKINS_SLAVE_K8S_DEPLOYMENT_CLOUD_NAME}]"
+		println "JENKINS_SLAVE_K8S_DEPLOYMENT_CLOUD_NAME value is: [${env.JENKINS_SLAVE_K8S_DEPLOYMENT_CLOUD_NAME}]"
 
 		return env.JENKINS_SLAVE_K8S_DEPLOYMENT_CLOUD_NAME
 //	}
