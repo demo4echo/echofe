@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: jdk-gradle-docker-k8s-helm
-    image: ${JENKINS_SLAVE_CONTAINER_IMAGE_NAME}
+    image: alpine_openjdk8_k8scdk
     command:
     - cat
     tty: true
@@ -17,10 +17,6 @@ spec:
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run/docker.sock
-    - name: docker-cache-vol #not needed in real world (as it will be in the image already)
-      mountPath: /root/.docker
-#    - name: kubectl-cache-vol
-#      mountPath: /root/.kube
     - name: gradle-cache-vol
       mountPath: /root/.gradle
     - name: helm-cache-vol
@@ -29,12 +25,6 @@ spec:
   - name: docker-socket
     hostPath:
       path: /var/run/docker.sock
-  - name: docker-cache-vol
-    hostPath:
-      path: /root/.docker
-#  - name: kubectl-cache-vol
-#    hostPath:
-#      path: /root/.kube
   - name: gradle-cache-vol
     hostPath:
       path: /root/.gradle

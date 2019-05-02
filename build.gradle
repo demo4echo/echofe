@@ -46,15 +46,13 @@ repositories
 
 // Adding some properties
 ext {
-	serviceName = "tmeltser"	// For DockerHub registry
+	serviceName = "demo4echo"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
 //	productVersion = "v0.1.0-feature1"
 //	productVersion = gitVersion()
 	productVersion = manifestVersion()
 	productInternalPort = "9999"
 	productExternalPort = "30999"
-	productK8SmanifestsFolder = "k8s/manifests"
-	productK8SsetupFile = "echofeManifest.yaml"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
 }
 
@@ -153,6 +151,7 @@ helm {
 	}
 }
 
+task helmUpdate(dependsOn: 'helmInstall')
 task helmUninstall(dependsOn: 'helmDelete')
 
 // Notes:
@@ -169,7 +168,7 @@ def manifestVersion() {
 //	return "${details.lastTag}.${details.branchName}"
 	
 	// An alternative
-	return "v0.1.0-demo4echo.${details.branchName}"
+	return "v0.1.0.${details.branchName}"
 
 //	println "last tag is: ${details.lastTag}"
 //	println "commitDistance is: ${details.commitDistance}"
