@@ -167,8 +167,8 @@ def manifestVersion() {
 	// This doesn't work under Jenkins as it doesn't fetch the tags
 //	return "${details.lastTag}.${details.branchName}"
 	
-	// An alternative
-	return "v0.1.0.${details.branchName}"
+	// An alternative (can also be "v0.1.0-demo.${details.branchName}")
+	return "v0.1.0-${details.branchName}"
 
 //	println "last tag is: ${details.lastTag}"
 //	println "commitDistance is: ${details.commitDistance}"
