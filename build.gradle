@@ -48,6 +48,7 @@ repositories
 ext {
 	serviceName = "demo4echo"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
+	productRepository = "${serviceName}/${productName}"
 //	productVersion = "v0.1.0-feature1"
 //	productVersion = gitVersion()
 	productVersion = manifestVersion()
@@ -82,7 +83,7 @@ test {
 
 docker {
 	name "${productName}:${productVersion}"
-	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
+	tag "privateRegistry", "${productRepository}:${productVersion}"	// For DockerHub registry
 	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}"])
 	files jar.outputs
 	copySpec.into("build/libs")
@@ -116,8 +117,9 @@ helm {
 	debug = true
 
 	filtering {
-		// This value will be resolvable in all charts' YAML files as ${authorName}
+		// These values will be resolvable in all charts' YAML files (e.g. imageTag => ${productVersion})
 		values.put 'imageTag',"${productVersion}"
+		values.put 'imageRepository',"${productRepository}"
 	}
 
 	charts {

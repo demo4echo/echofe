@@ -101,6 +101,8 @@ def resolveCloudNameByBranchName() {
 			env.CLOUD_NAME = 'development'		    
 		}
 		
+		println "Resolved cloud name is: [${env.CLOUD_NAME}]"
+		
 		// Return the resolved cloud name
 		return env.CLOUD_NAME
 	}
