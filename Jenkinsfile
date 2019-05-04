@@ -89,8 +89,10 @@ pipeline {
 // Determine the applicable k8s cloud (towards Jenkins' configuration of the K8S plugin)
 //
 def resolveCloudNameByBranchName() {
-	node(env.NODE_NAME) {
-		println "Node name is: [${env.NODE_NAME}]"
+//	node(env.NODE_NAME) {
+	node('master') {
+		println "Within resolveCloudNameByBranchName() => Node name is: [${env.NODE_NAME}]"
+
 		println "Branch name is: [${env.BRANCH_NAME}]"
 
 		if (env.BRANCH_NAME == 'master') {
@@ -115,6 +117,8 @@ def resolveCloudNameByBranchName() {
 def assimilateEnvironmentVariables() {
 //	node(env.NODE_NAME) {
 //		checkout(scm) => don't need it as we'll call the function after the repository has been fetched (checkout(scm) is called in the 'agent' phase)
+
+		println "Within assimilateEnvironmentVariables() => Node name is: [${env.NODE_NAME}]"
 
 		def props = readProperties interpolate: true, file: 'EnvFile.properties'
 		props.each {
