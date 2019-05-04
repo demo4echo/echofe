@@ -89,7 +89,8 @@ pipeline {
 // Determine the applicable k8s cloud (towards Jenkins' configuration of the K8S plugin)
 //
 def resolveCloudNameByBranchName() {
-	node {
+	node(env.NODE_NAME) {
+		println "Node name is: [${env.NODE_NAME}]"
 		println "Branch name is: [${env.BRANCH_NAME}]"
 
 		if (env.BRANCH_NAME == 'master') {
