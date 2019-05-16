@@ -46,15 +46,14 @@ repositories
 
 // Adding some properties
 ext {
-	serviceName = "tmeltser"	// For DockerHub registry
+	serviceName = "demo4echo"	// For DockerHub registry
 	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
+	productRepository = "${serviceName}/${productName}"
 //	productVersion = "v0.1.0-feature1"
 //	productVersion = gitVersion()
 	productVersion = manifestVersion()
 	productInternalPort = "9999"
 	productExternalPort = "30999"
-	productK8SmanifestsFolder = "k8s/manifests"
-	productK8SsetupFile = "echofeManifest.yaml"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
 }
 
@@ -84,7 +83,7 @@ test {
 
 docker {
 	name "${productName}:${productVersion}"
-	tag "privateRegistry", "${serviceName}/${productName}:${productVersion}"	// For DockerHub registry
+	tag "privateRegistry", "${productRepository}:${productVersion}"	// For DockerHub registry
 	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}"])
 	files jar.outputs
 	copySpec.into("build/libs")
@@ -118,8 +117,9 @@ helm {
 	debug = true
 
 	filtering {
-		// This value will be resolvable in all charts' YAML files as ${authorName}
+		// These values will be resolvable in all charts' YAML files (e.g. imageTag => ${productVersion})
 		values.put 'imageTag',"${productVersion}"
+		values.put 'imageRepository',"${productRepository}"
 	}
 
 	charts {
@@ -153,6 +153,7 @@ helm {
 	}
 }
 
+task helmUpdate(dependsOn: 'helmInstall')
 task helmUninstall(dependsOn: 'helmDelete')
 
 // Notes:
@@ -168,8 +169,8 @@ def manifestVersion() {
 	// This doesn't work under Jenkins as it doesn't fetch the tags
 //	return "${details.lastTag}.${details.branchName}"
 	
-	// An alternative
-	return "v0.1.0-demo4echo.${details.branchName}"
+	// An alternative (can also be "v0.1.0-demo.${details.branchName}")
+	return "v0.1.0-${details.branchName}"
 
 //	println "last tag is: ${details.lastTag}"
 //	println "commitDistance is: ${details.commitDistance}"

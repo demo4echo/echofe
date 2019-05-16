@@ -65,9 +65,13 @@ public class ROOTTest
 	@Test
 	public final void testGetROOT() 
 	{
+		System.out.println("com.efrat.echofe.serviceEndPoint system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
+
+		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
+		
 		WebTarget target = ClientBuilder
 				.newClient()
-        		.target(BASE_URI)
+        		.target(baseURI)
         		.path(ROOTResource.SELF_PATH);
         		
 		String responseAsString = target.request(MediaType.TEXT_PLAIN).get(String.class);
