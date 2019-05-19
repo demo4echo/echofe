@@ -1,5 +1,4 @@
 EnvFile.properties merge=ours
 gradle.properties merge=ours
 .docker/** merge=ours
-\.kube/config merge=ours
-/kube/** merge=ours
+/.kube/config merge=ours
