@@ -5,4 +5,4 @@ description: A Helm chart for demo app named Echo FE
 appVersion: ${chartVersion}
 maintainers:
   - name: Tiran Meltser
-    email: tiran.meltser@mavenir.com
+    email: tiran.meltser@efrat.com

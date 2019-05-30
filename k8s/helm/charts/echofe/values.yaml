@@ -16,8 +16,9 @@ fullnameOverride: ""
 
 service:
   type: NodePort
-  port: 9999
-  nodePort: 30999
+  port: "${servicePort}"
+  targetPort: "${serviceTargetPort}"
+  nodePort: ${serviceNodePort}
 
 ingress:
   enabled: true

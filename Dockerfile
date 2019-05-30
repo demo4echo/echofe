@@ -15,6 +15,6 @@ USER echouser
 
 ENTRYPOINT ["java","-jar","./echofe.jar"]
 
-EXPOSE 9999
+EXPOSE $PRODUCT_INTERNAL_PORT
 
 LABEL maintainer="tiran.meltser@efrat.com"

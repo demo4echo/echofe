@@ -14,5 +14,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['{{ include "echofe.fullname" . }}:{{ .Values.service.port }}']
+      args:  ['{{ include "echofe.fullname" . }}-service:{{ .Values.service.port }}']
   restartPolicy: Never

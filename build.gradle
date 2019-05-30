@@ -84,7 +84,7 @@ test {
 docker {
 	name "${productName}:${productVersion}"
 	tag "privateRegistry", "${productRepository}:${productVersion}"	// For DockerHub registry
-	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}"])
+	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}",PRODUCT_INTERNAL_PORT:"${productInternalPort}"])
 	files jar.outputs
 	copySpec.into("build/libs")
 //	pull true
@@ -98,6 +98,7 @@ dockerRun {
 	name "${productName}"
 	image "${productName}:${productVersion}"
 	ports "${productExternalPort}:${productInternalPort}"
+	env 'INTERNAL_PORT_ENV_VAR':"${productInternalPort}"
 	daemonize true
 	clean true
 }
@@ -120,6 +121,9 @@ helm {
 		// These values will be resolvable in all charts' YAML files (e.g. imageTag => ${productVersion})
 		values.put 'imageTag',"${productVersion}"
 		values.put 'imageRepository',"${productRepository}"
+		values.put 'servicePort',"${productInternalPort}"
+		values.put 'serviceTargetPort',"${productInternalPort}"
+		values.put 'serviceNodePort',"${productExternalPort}"
 	}
 
 	charts {
@@ -155,6 +159,16 @@ helm {
 
 task helmUpdate(dependsOn: 'helmInstall')
 task helmUninstall(dependsOn: 'helmDelete')
+
+task helmTest(type:Exec) {
+	executable "helm"
+	args "test","${productName}"
+}
+
+task helmTestAndClean(type:Exec) {
+	executable "helm"
+	args "test","${productName}","--cleanup"
+}
 
 // Notes:
 // 1. helmPackge and helmInstall tasks are used as is

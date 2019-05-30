@@ -25,13 +25,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 9999
+              containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          livenessProbe:
+          env:
+            - name: INTERNAL_PORT_ENV_VAR
+              value: {{ .Values.service.targetPort }}
+          readinessProbe:
             httpGet:
               path: /
               port: http
-          readinessProbe:
+          livenessProbe:
             httpGet:
               path: /
               port: http
