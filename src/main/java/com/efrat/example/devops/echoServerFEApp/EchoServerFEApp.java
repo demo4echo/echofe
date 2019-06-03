@@ -21,7 +21,8 @@ import org.glassfish.jersey.server.ResourceConfig;
  */
 public class EchoServerFEApp extends Thread
 {
-	public static final String BASE_URI = "http://0.0.0.0:9999";
+	private static final int DEFAULT_APP_PORT = 9999*0;
+
 	
 	private HttpServer server;
 	
@@ -90,8 +91,20 @@ public class EchoServerFEApp extends Thread
 	 */
 	void startServer() throws IOException
 	{
-		// Create it 
-		URI baseUri = UriBuilder.fromUri(BASE_URI).build();
+		// Get operational port from a designated environment variable
+		String designatedApplicationPort = System.getenv("INTERNAL_PORT_ENV_VAR");
+		
+		// Determine the port on which the server should run
+	    int port = (designatedApplicationPort != null && designatedApplicationPort.isEmpty() == false) ? Integer.parseInt(designatedApplicationPort) : DEFAULT_APP_PORT;
+
+		// Construct Base URI
+		String baseUriStr = "http://0.0.0.0:" + String.valueOf(port);
+
+		// Log it
+		System.out.println("Server about to run, listening on " + port);
+
+		// Create the server
+		URI baseUri = UriBuilder.fromUri(baseUriStr).build();
 		ResourceConfig config = obtainServerConfiguration();
 	    this.server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
 
