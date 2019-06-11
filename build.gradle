@@ -110,9 +110,9 @@ sourceSets {
 			srcDirs buildDir.getName() + "/generated/source/proto/main/grpc"
 			srcDirs buildDir.getName() + "/generated/source/proto/main/java"
 		}
-		proto {
-			srcDirs "${externalEchoBeProtoFolderPath}"
-		}
+//		proto {
+//			srcDirs "${externalEchoBeProtoFolderPath}"
+//		}
 	}
 }
 
