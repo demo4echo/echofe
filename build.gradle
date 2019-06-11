@@ -40,33 +40,6 @@ def grpcVersion = '1.21.0'
 def protobufVersion = '3.7.1'
 def protocVersion = protobufVersion
 
-dependencies
-{
-	// Use JUnit test framework
-	testImplementation 'junit:junit:4.12'
-
-	// Jersey
-	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
-	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
-
-	// The production code uses the SLF4J logging API at compile time
-	compile 'org.slf4j:slf4j-api:1.7.25'
-
-	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
-	implementation "io.grpc:grpc-stub:${grpcVersion}"
-	compileOnly "javax.annotation:javax.annotation-api:1.2"
-
-	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
-}
-
-// In this section you declare where to find the dependencies of your project
-repositories
-{
-	// Use jcenter for resolving your dependencies.
-	// You can declare any Maven/Ivy/file repository here.
-	jcenter()
-}
-
 // Adding some properties
 ext {
 	serviceName = "demo4echo"	// For DockerHub registry
@@ -80,6 +53,36 @@ ext {
 	productK8ShelmChartsFolder = "k8s/helm/charts"
 	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
+}
+
+dependencies
+{
+	// Use JUnit test framework
+	testImplementation 'junit:junit:4.12'
+
+	// Jersey
+	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
+	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
+
+	// The production code uses the SLF4J logging API at compile time
+	compile 'org.slf4j:slf4j-api:1.7.25'
+
+	// gRPC
+	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+	implementation "io.grpc:grpc-stub:${grpcVersion}"
+	compileOnly "javax.annotation:javax.annotation-api:1.2"
+	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+	
+	// ProtoC
+	protobuf files("${externalEchoBeProtoFolderPath}")
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories
+{
+	// Use jcenter for resolving your dependencies.
+	// You can declare any Maven/Ivy/file repository here.
+	jcenter()
 }
 
 // Configure protobuf
