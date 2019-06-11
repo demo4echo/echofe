@@ -42,18 +42,25 @@ public class EchoResource
 		// Naive approach
 //    	return what;
 
-		// Get remote approach host and port from designated environment variables
-		String echobeServiceHostAsStr = System.getenv("EXTERNAL_ECHOBE_HOST__ENV_VAR");
-		String echobeServicePortAsStr = System.getenv("EXTERNAL_ECHOBE_PORT__ENV_VAR");
-
-		// Acquire end point access
-		EchoServiceFacade client = new EchoServiceFacade(echobeServiceHostAsStr,Integer.parseInt(echobeServicePortAsStr));
-
+		EchoServiceFacade client = null;
+		
 		try 
 		{
+			// Get remote approach host and port from designated environment variables
+			String echobeServiceHostAsStr = System.getenv("EXTERNAL_ECHOBE_HOST_ENV_VAR");
+			String echobeServicePortAsStr = System.getenv("EXTERNAL_ECHOBE_PORT_ENV_VAR");
+
+			// Acquire end point access
+			client = new EchoServiceFacade(echobeServiceHostAsStr,Integer.parseInt(echobeServicePortAsStr));
+
 			String reply = client.echo(what);
 			return reply;
 		} 
+		catch (Throwable t)
+		{
+			t.printStackTrace();
+			return "NOK";
+		}
 		finally 
 		{
 			try 
