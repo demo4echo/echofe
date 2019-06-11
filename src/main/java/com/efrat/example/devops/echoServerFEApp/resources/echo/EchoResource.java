@@ -9,6 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.efrat.example.devops.echoServerFEApp.rsi.grpc.echo.EchoServiceFacade;
+
 /**
  * @author tmeltse
  *
@@ -33,10 +35,36 @@ public class EchoResource
      * @param what - the item to echo
      * @return String that will be returned as a text/plain response.
      */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getEcho(@QueryParam("what") String what) 
-    {
-        return what;
-    }	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getEcho(@QueryParam("what") String what) 
+	{
+		// Naive approach
+//    	return what;
+
+		// Get remote approach host and port from designated environment variables
+		String echobeServiceHostAsStr = System.getenv("EXTERNAL_ECHOBE_HOST__ENV_VAR");
+		String echobeServicePortAsStr = System.getenv("EXTERNAL_ECHOBE_PORT__ENV_VAR");
+
+		// Acquire end point access
+		EchoServiceFacade client = new EchoServiceFacade(echobeServiceHostAsStr,Integer.parseInt(echobeServicePortAsStr));
+
+		try 
+		{
+			String reply = client.echo(what);
+			return reply;
+		} 
+		finally 
+		{
+			try 
+			{
+				client.shutdown();
+			} 
+			catch (InterruptedException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}	
 }

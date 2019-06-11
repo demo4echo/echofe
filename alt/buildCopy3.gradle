@@ -10,10 +10,7 @@ plugins
 {
    // Apply the java-library plugin to add support for Java Library
 	id 'java-library'
-
-	// Apply the eclipse plugin to add support for Eclipse
-	id 'eclipse'
-
+	
 	// gradle-docker plugins
 	id 'com.palantir.docker' version '0.21.0'
 	id 'com.palantir.docker-run' version '0.21.0'
@@ -30,15 +27,7 @@ plugins
 	
 	// Gradle Download Task
 	id "de.undercouch.download" version '3.4.3'
-	
-	// ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier gradle versions
-	id 'com.google.protobuf' version '0.8.8'
 }
-
-// Updating the version in our release process.
-def grpcVersion = '1.21.0'
-def protobufVersion = '3.7.1'
-def protocVersion = protobufVersion
 
 dependencies
 {
@@ -48,15 +37,6 @@ dependencies
 	// Jersey
 	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
 	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
-
-	// The production code uses the SLF4J logging API at compile time
-	compile 'org.slf4j:slf4j-api:1.7.25'
-
-	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
-	implementation "io.grpc:grpc-stub:${grpcVersion}"
-	compileOnly "javax.annotation:javax.annotation-api:1.2"
-
-	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -78,92 +58,32 @@ ext {
 	productInternalPort = "9999"
 	productExternalPort = "30999"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
-	externalEchoBeProtoFolderPath = "${buildDir}/ext/main/proto"
-	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
 }
 
-// Configure protobuf
-protobuf {
-	protoc { 
-   	artifact = "com.google.protobuf:protoc:${protocVersion}" 
-   }
-	plugins {
-		grpc { 
-			artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" 
-		}
+// Download shared resources (list) with other repositories
+task downloadProtoFiles {
+	// Download directory listing via GitHub API
+	def dir = "https://api.github.com/repos/tmeltser/echobe/contents/src/main/proto"
+	def contentsFile = new File("${buildDir}/tmp","proto_directory_contents.json")
+	download {
+		src dir
+		dest contentsFile
 	}
-	generateProtoTasks {
-		all()*.plugins { 
-			grpc {} 
-		}
+
+	// Parse directory listing
+	def contents = new groovy.json.JsonSlurper().parseFile(contentsFile, "utf-8")
+	def urls = contents.collect { it.download_url }
+
+	// Download files
+	download {
+		src urls
+		dest "${buildDir}/ext/main/proto"
+//		overwrite true
+		onlyIfModified true
 	}
-}
 
-// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
-sourceSets {
-	main {
-		java {
-			srcDirs "${buildDir}/generated/source/proto/main/grpc"
-			srcDirs "${buildDir}/generated/source/proto/main/java"
-		}
-		proto {
-			srcDirs "${externalEchoBeProtoFolderPath}"
-		}
-	}
-}
-
-/* ----------------------------------------------------------------------------
- *
- *  Additional parts from EGradle template for comfortable eclipse setup
- *  (necessary, because every EGradle template MUST be importable out of the box)
- * 
- * ---------------------------------------------------------------------------- */
-
-// To have javadocs in eclipse added - where no sources are available - we need these lines:
-// see https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseClasspath.html
-eclipse {	 
-	classpath {
-		downloadSources = true // default: true
-		downloadJavadoc = true // default: false
-	}
-} 
-
-// first define an array containing source folders to be always available - even when not existing already
-def eclipseSourceFolders = [
-	'src/main/java',
-	'src/main/resources',
-	'src/test/java',
-	'src/test/resources'
-];
-
-// now create those source folders when not existing, when eclipse task is executed:
-tasks.eclipse.dependsOn << {	
-	for (String sourceFolder: eclipseSourceFolders) { 
-		def resourceDir = new File(project.projectDir, sourceFolder)
-		
-		if (!resourceDir.exists() && !resourceDir.mkdirs()) {
-    		logger.info("Not able to create %1",resourceDir);
-    	}
-	}
-}
-
-// Download shared resource with other repositories
-task downloadEchoBeProtoFile(type: Download) {
-	def details = versionDetails()
-	
-	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
-	dest "${externalEchoBeProtoFilePath}"
-//	overwrite true
-	onlyIfModified true
-}
-
-// Define an Initializer task
-task initializer(dependsOn: 'downloadEchoBeProtoFile')
-
-// Make every other task depend on 'initializer'
-// matching() and all() are "live" so any tasks declared after this line will also depend on 'initializer'
-tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile' }.all { 
-	Task task -> task.dependsOn initializer
+	// Delete downloaded directory listing
+	contentsFile.delete()
 }
 
 // Create an uber jar
@@ -241,8 +161,6 @@ helm {
 		values.put 'servicePort',"${productInternalPort}"
 		values.put 'serviceTargetPort',"${productInternalPort}"
 		values.put 'serviceNodePort',"${productExternalPort}"
-		values.put 'externalEchobeHost',echobeServiceEndPointHost
-		values.put 'externalEchobePort',echobeServiceEndPointPort
 	}
 
 	charts {

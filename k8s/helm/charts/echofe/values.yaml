@@ -14,6 +14,11 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+deployment:
+  env:
+    EXTERNAL_ECHOBE_HOST__ENV_VAR: ${externalEchobeHost}
+    EXTERNAL_ECHOBE_PORT__ENV_VAR: "${externalEchobePort}"
+
 service:
   type: NodePort
   port: "${servicePort}"
