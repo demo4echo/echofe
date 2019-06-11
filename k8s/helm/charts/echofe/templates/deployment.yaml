@@ -29,11 +29,11 @@ spec:
               protocol: TCP
           env:
             - name: INTERNAL_PORT_ENV_VAR
-              value: {{ .Values.service.targetPort }}
+              value: "{{ .Values.service.targetPort }}"
             - name: EXTERNAL_ECHOBE_HOST__ENV_VAR
-              value: {{ .Values.deployment.env.EXTERNAL_ECHOBE_HOST__ENV_VAR }}
+              value: "{{ .Values.deployment.env.EXTERNAL_ECHOBE_HOST__ENV_VAR }}"
             - name: EXTERNAL_ECHOBE_PORT__ENV_VAR
-              value: {{ .Values.deployment.env.EXTERNAL_ECHOBE_PORT__ENV_VAR }}
+              value: "{{ .Values.deployment.env.EXTERNAL_ECHOBE_PORT__ENV_VAR }}"
           readinessProbe:
             httpGet:
               path: /
