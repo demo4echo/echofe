@@ -50,6 +50,10 @@ public class EchoResource
 			String echobeServiceHostAsStr = System.getenv("EXTERNAL_ECHOBE_HOST_ENV_VAR");
 			String echobeServicePortAsStr = System.getenv("EXTERNAL_ECHOBE_PORT_ENV_VAR");
 
+			// Log something
+			System.out.println("Got from environment the following echobe HOST: [" + echobeServiceHostAsStr + "]");
+			System.out.println("Got from environment the following echobe PORT: [" + echobeServicePortAsStr + "]");
+			
 			// Acquire end point access
 			client = new EchoServiceFacade(echobeServiceHostAsStr,Integer.parseInt(echobeServicePortAsStr));
 
