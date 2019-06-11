@@ -74,7 +74,8 @@ dependencies
 	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
 	
 	// ProtoC
-	protobuf files("${externalEchoBeProtoFolderPath}")
+	compile files("${externalEchoBeProtoFolderPath}")
+//	protobuf files("${externalEchoBeProtoFolderPath}")
 }
 
 // In this section you declare where to find the dependencies of your project
