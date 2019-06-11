@@ -74,7 +74,6 @@ dependencies
 	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
 	
 	// ProtoC
-//	compile files("${externalEchoBeProtoFolderPath}")
 	protobuf files("${externalEchoBeProtoFolderPath}")
 }
 
