@@ -78,7 +78,7 @@ ext {
 	productInternalPort = "9999"
 	productExternalPort = "30999"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
-	externalEchoBeProtoFolderPath = "${buildDir}/ext/main/proto"
+	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
 }
 
@@ -103,8 +103,8 @@ protobuf {
 sourceSets {
 	main {
 		java {
-			srcDirs "${buildDir}/generated/source/proto/main/grpc"
-			srcDirs "${buildDir}/generated/source/proto/main/java"
+			srcDirs buildDir.getName() + "/generated/source/proto/main/grpc"
+			srcDirs buildDir.getName() + "/generated/source/proto/main/java"
 		}
 		proto {
 			srcDirs "${externalEchoBeProtoFolderPath}"
@@ -195,7 +195,7 @@ docker {
 	tag "privateRegistry", "${productRepository}:${productVersion}"	// For DockerHub registry
 	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}",PRODUCT_INTERNAL_PORT:"${productInternalPort}"])
 	files jar.outputs
-	copySpec.into("${buildDir}/libs")
+	copySpec.into(buildDir.getName() + "/libs")
 //	pull true
 //	noCache true
 }
