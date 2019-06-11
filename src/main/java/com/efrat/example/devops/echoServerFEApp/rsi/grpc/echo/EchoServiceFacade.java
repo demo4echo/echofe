@@ -7,7 +7,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.efrat.example.devops.echoServerBEApp.generated.services.echo.*;
+import com.efrat.example.devops.echoServerBEApp.generated.services.echo.EchoGrpc;
+import com.efrat.example.devops.echoServerBEApp.generated.services.echo.EchoQuery;
+import com.efrat.example.devops.echoServerBEApp.generated.services.echo.EchoReply;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
