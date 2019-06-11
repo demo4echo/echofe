@@ -40,8 +40,8 @@ public class EchoResource
 	public String getEcho(@QueryParam("what") String what) 
 	{
 		// Naive approach
-//    	return what;
-
+		return what;
+/*
 		EchoServiceFacade client = null;
 		
 		try 
@@ -76,6 +76,6 @@ public class EchoResource
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}	
 }
