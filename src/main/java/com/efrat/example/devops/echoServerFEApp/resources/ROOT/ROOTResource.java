@@ -36,14 +36,6 @@ public class ROOTResource
     @Produces(MediaType.TEXT_PLAIN)
     public String getROOT() 
     {
-		// Get remote approach host and port from designated environment variables
-		String echobeServiceHostAsStr = System.getenv("EXTERNAL_ECHOBE_HOST_ENV_VAR");
-		String echobeServicePortAsStr = System.getenv("EXTERNAL_ECHOBE_PORT_ENV_VAR");
-
-		// Log something
-		System.out.println("Got from environment the following echobe HOST: [" + echobeServiceHostAsStr + "]");
-		System.out.println("Got from environment the following echobe PORT: [" + echobeServicePortAsStr + "]");
-    	
         return GET_RESPONSE;
     }	
 }
