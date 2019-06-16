@@ -211,6 +211,9 @@ dockerRun {
 	image "${productName}:${productVersion}"
 	ports "${productExternalPort}:${productInternalPort}"
 	env 'INTERNAL_PORT_ENV_VAR':"${productInternalPort}"
+	env 'EXTERNAL_ECHOBE_HOST_ENV_VAR':echobeServiceEndPointHost
+	env 'EXTERNAL_ECHOBE_PORT_ENV_VAR':echobeServiceEndPointPort
+	env 'ENGAGE_MOCKUP_REMOTE_INTERFACES':engageMockupRemoteInterfaces
 	daemonize true
 	clean true
 }
@@ -249,6 +252,7 @@ helm {
 		values.put 'serviceNodePort',"${productExternalPort}"
 		values.put 'externalEchobeHost',echobeServiceEndPointHost
 		values.put 'externalEchobePort',echobeServiceEndPointPort
+		values.put 'engageMockupRemoteInterfaces', engageMockupRemoteInterfaces
 	}
 
 	charts {

@@ -18,6 +18,7 @@ deployment:
   env:
     echobeHost: "${externalEchobeHost}"
     echobePort: "${externalEchobePort}"
+	mockupRemoteInterfaces: "{engageMockupRemoteInterfaces}"
 
 service:
   type: NodePort

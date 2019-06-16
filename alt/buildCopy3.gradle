@@ -27,6 +27,14 @@ plugins
 	
 	// Gradle Download Task
 	id "de.undercouch.download" version '3.4.3'
+
+	// gradle-apt-plugin and gradle-apt-eclipse-plugin
+	// Also need to run the following Eclipse tasks:
+	// 	(*) eclipseJdtApt
+	// 	(*) eclipseFactorypath
+	// 	(*) eclipseJdt
+//	id "net.ltgt.apt" version "0.21"
+//	id "net.ltgt.apt-eclipse" version "0.21"
 }
 
 dependencies
@@ -37,6 +45,29 @@ dependencies
 	// Jersey
 	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
 	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
+	
+	// HK2	
+//	compile group: 'javax.inject', name: 'javax.inject', version: '1'
+//	compile group: 'org.glassfish.hk2', name: 'hk2-utils', version: '2.5.0'
+//	compile group: 'org.glassfish.hk2', name: 'hk2-api', version: '2.5.0'
+//	compile group: 'org.glassfish.hk2', name: 'hk2-metadata-generator', version: '2.5.0'
+  
+//	testCompile group: 'javax.inject', name: 'javax.inject', version: '1'
+//	testCompile group: 'org.glassfish.hk2', name: 'hk2-utils', version: '2.5.0'
+//	testCompile group: 'org.glassfish.hk2', name: 'hk2-api', version: '2.5.0'
+//	testCompile group: 'org.glassfish.hk2', name: 'hk2-metadata-generator', version: '2.5.0'
+	
+	// Dagger2 - begin
+//	compile("com.google.dagger:dagger:2.23.1")
+//	annotationProcessor("com.google.dagger:dagger-compiler:2.23.1")
+
+	// auto-factory contains both annotations and their processor, neither is needed at runtime
+//	compileOnly("com.google.auto.factory:auto-factory:1.0-beta6")
+//	annotationProcessor("com.google.auto.factory:auto-factory:1.0-beta6")
+
+//	compileOnly("org.immutables:value-annotations:2.7.5")
+//	annotationProcessor("org.immutables:value:2.7.5")
+	// Dagger2 - end
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -46,6 +77,13 @@ repositories
 	// You can declare any Maven/Ivy/file repository here.
 	jcenter()
 }
+
+// Workaround for https://github.com/gradle/gradle/issues/4956
+//sourceSets.configureEach { sourceSet ->
+//	tasks.named(sourceSet.compileJavaTaskName).configure {
+//		options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/${sourceSet.name}")
+//	}
+//}
 
 // Adding some properties
 ext {

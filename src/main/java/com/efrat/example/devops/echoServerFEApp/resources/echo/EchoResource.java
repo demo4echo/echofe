@@ -10,6 +10,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.efrat.example.devops.echoServerFEApp.rsi.grpc.echo.EchoServiceFacade;
+import com.efrat.example.devops.echoServerFEApp.rsi.grpc.echo.EchoServiceFacadeFactory;
 
 /**
  * @author tmeltse
@@ -19,13 +20,12 @@ import com.efrat.example.devops.echoServerFEApp.rsi.grpc.echo.EchoServiceFacade;
 public class EchoResource 
 {
 	public static final String SELF_PATH = "echo";
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public EchoResource() 
 	{
-		// TODO Auto-generated constructor stub
 	}
 
     /**
@@ -39,25 +39,12 @@ public class EchoResource
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getEcho(@QueryParam("what") String what) 
 	{
-		// Naive approach
-//		return what;
-
-		EchoServiceFacade client = null;
+		EchoServiceFacade echoServiceFacade = EchoServiceFacadeFactory.create();
 		
 		try 
 		{
-			// Get remote approach host and port from designated environment variables
-			String echobeServiceHostAsStr = System.getenv("EXTERNAL_ECHOBE_HOST_ENV_VAR");
-			String echobeServicePortAsStr = System.getenv("EXTERNAL_ECHOBE_PORT_ENV_VAR");
-
-			// Log something
-			System.out.println("Got from environment the following echobe HOST: [" + echobeServiceHostAsStr + "]");
-			System.out.println("Got from environment the following echobe PORT: [" + echobeServicePortAsStr + "]");
-			
 			// Acquire end point access
-			client = new EchoServiceFacade(echobeServiceHostAsStr,Integer.parseInt(echobeServicePortAsStr));
-
-			String reply = client.echo(what);
+			String reply = echoServiceFacade.echo(what);
 			return reply;
 		} 
 		catch (Throwable t)
@@ -69,7 +56,7 @@ public class EchoResource
 		{
 			try 
 			{
-				client.shutdown();
+				echoServiceFacade.shutdown();
 			} 
 			catch (InterruptedException e) 
 			{
