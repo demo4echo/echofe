@@ -152,9 +152,10 @@ tasks.eclipse.dependsOn << {
 
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
-	def details = versionDetails()
+//	def details = versionDetails()
 	
-	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
+//	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
+	src "https://raw.githubusercontent.com/tmeltser/echobe/integration/src/main/proto/echo.proto"
 	dest "${externalEchoBeProtoFilePath}"
 //	overwrite true
 	onlyIfModified true
