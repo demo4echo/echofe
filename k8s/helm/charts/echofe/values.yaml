@@ -14,10 +14,17 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+deployment:
+  env:
+    echobeHost: "${externalEchobeHost}"
+    echobePort: "${externalEchobePort}"
+    mockupRemoteInterfaces: "${engageMockupRemoteInterfaces}"
+
 service:
   type: NodePort
-  port: 9999
-  nodePort: 30999
+  port: "${servicePort}"
+  targetPort: "${serviceTargetPort}"
+  nodePort: "${serviceNodePort}"
 
 ingress:
   enabled: true

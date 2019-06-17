@@ -25,7 +25,7 @@ public class ROOTTest
 {
 	// Need to take this externally to a file
 //	public static final String BASE_URI = "http://192.168.99.100:9999";
-	public static final String BASE_URI = "http://192.168.99.100:30999";
+//	public static final String BASE_URI = "http://192.168.99.100:30999";
 
 	/**
 	 * @throws java.lang.Exception
@@ -67,7 +67,10 @@ public class ROOTTest
 	{
 		System.out.println("com.efrat.echofe.serviceEndPoint system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
 
-		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
+//		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
+		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint");
+		
+		assertNotNull(baseURI);
 		
 		WebTarget target = ClientBuilder
 				.newClient()

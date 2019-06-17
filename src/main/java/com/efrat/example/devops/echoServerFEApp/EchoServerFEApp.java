@@ -4,27 +4,17 @@
 package com.efrat.example.devops.echoServerFEApp;
 
 import java.io.IOException;
-import java.net.URI;
 import java.text.MessageFormat;
-import java.util.concurrent.ExecutionException;
 
-import javax.ws.rs.core.UriBuilder;
-
-import org.glassfish.grizzly.GrizzlyFuture;
-import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 /**
  * @author tmeltse
  *
  */
-public class EchoServerFEApp extends Thread
+public class EchoServerFEApp
 {
-	public static final String BASE_URI = "http://0.0.0.0:9999";
-	
-	private HttpServer server;
-	
 	/**
 	 * MEP
 	 * 
@@ -34,16 +24,16 @@ public class EchoServerFEApp extends Thread
 	{
 		System.out.println("Staring main method");
 
-		EchoServerFEApp app = new EchoServerFEApp();
-		
+		EchoServerFEMep serverApp = new EchoServerFEMep();
+	      
 		try 
 		{
 			// Start the application
 			long startTS = System.currentTimeMillis();
-			app.startServer();
+			serverApp.startServer();
 			
 			// Add shutdown hook
-			addShutdownHook(app);
+			addShutdownHook(serverApp);
 
 			// Measure it
 			long endTS = System.currentTimeMillis();
@@ -63,67 +53,5 @@ public class EchoServerFEApp extends Thread
 	private static void addShutdownHook(Thread shutdownHook)
 	{
 		Runtime.getRuntime().addShutdownHook(shutdownHook);
-	}
-	
-	/**
-	 * CTOR 
-	 */
-	public EchoServerFEApp() 
-	{
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Thread#start()
-	 */
-	@Override
-	public synchronized void start() 
-	{
-		// TODO Auto-generated method stub
-		super.start();
-		
-		System.out.println("Process has terminated");
-	}
-
-	/**
-	 * 
-	 * @throws IOException
-	 */
-	void startServer() throws IOException
-	{
-		// Create it 
-		URI baseUri = UriBuilder.fromUri(BASE_URI).build();
-		ResourceConfig config = obtainServerConfiguration();
-	    this.server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
-
-	    // Run it
-	    this.server.start();
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private ResourceConfig obtainServerConfiguration()
-	{
-	    ResourceConfig config = new ResourceConfig();
-	    config.packages("com.efrat.example.devops.echoServerFEApp.resources");
-//	    config.register(HelloWorldResource.class);
-	    
-	    return config;
-	}
-	
-	/**
-	 * 
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 */
-	void stopServer() throws InterruptedException, ExecutionException
-	{
-		if (this.server != null && this.server.isStarted() == true)
-		{
-			// Stop it
-			GrizzlyFuture<HttpServer> future = this.server.shutdown();
-			future.get();
-		}
 	}
 }

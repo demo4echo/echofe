@@ -47,15 +47,21 @@ pipeline {
 				}
 			}
 			steps {
+				sh './gradlew helmUninstall --no-daemon'
 				sh './gradlew helmUpdate --no-daemon'
 			}
 		}
-		stage('\u277B test \u2728') {//\u1F321
+		stage('\u277B verify \u2728') {
+			steps {
+				sh './gradlew helmTestAndClean --no-daemon'
+			}
+		}
+		stage('\u277C test \u2728') {//\u1F321
 			steps {
 				sh './gradlew test --no-daemon'
 			}
 		}
-		stage('\u277C uninstall \u2728') {//\u1F3F3
+		stage('\u277D uninstall \u2728') {//\u1F3F3
 			when {
 				environment name: 'CLOUD_NAME', value: 'development'
 			}
