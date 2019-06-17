@@ -34,7 +34,7 @@ spec:
               value: "{{ .Values.deployment.env.echobeHost }}"
             - name: EXTERNAL_ECHOBE_PORT_ENV_VAR
               value: "{{ .Values.deployment.env.echobePort }}"
-			- name: ENGAGE_MOCKUP_REMOTE_INTERFACES
+            - name: ENGAGE_MOCKUP_REMOTE_INTERFACES
               value: "{{ .Values.deployment.env.mockupRemoteInterfaces }}"
           readinessProbe:
             httpGet:
