@@ -38,11 +38,11 @@ spec:
               value: "{{ .Values.deployment.env.mockupRemoteInterfaces }}"
           readinessProbe:
             httpGet:
-              path: /
+              path: /{{ .Values.healthCheckRelativePath }}
               port: http
           livenessProbe:
             httpGet:
-              path: /
+              path: /{{ .Values.healthCheckRelativePath }}
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

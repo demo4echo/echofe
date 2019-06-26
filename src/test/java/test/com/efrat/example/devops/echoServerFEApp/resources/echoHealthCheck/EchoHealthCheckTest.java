@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test.com.efrat.example.devops.echoServerFEApp.resources.ROOT;
+package test.com.efrat.example.devops.echoServerFEApp.resources.echoHealthCheck;
 
 import static org.junit.Assert.*;
 
@@ -15,13 +15,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.efrat.example.devops.echoServerFEApp.resources.ROOT.ROOTResource;
+import com.efrat.example.devops.echoServerFEApp.resources.echoHealthCheck.EchoHealthCheckResource;
 
 /**
  * @author tmeltse
  *
  */
-public class ROOTTest
+public class EchoHealthCheckTest
 {
 	// Need to take this externally to a file
 //	public static final String BASE_URI = "http://192.168.99.100:9999";
@@ -60,7 +60,7 @@ public class ROOTTest
 	}
 
 	/**
-	 * Test method for {@link com.efrat.example.devops.echoServerFEApp.resources.ROOT.ROOTResource#getROOT()}.
+	 * Test method for {@link com.efrat.example.devops.echoServerFEApp.resources.echoHealthCheck.EchoHealthCheckResource#getROOT()}.
 	 */
 	@Test
 	public final void testGetROOT() 
@@ -75,10 +75,10 @@ public class ROOTTest
 		WebTarget target = ClientBuilder
 				.newClient()
         		.target(baseURI)
-        		.path(ROOTResource.SELF_PATH);
+        		.path(EchoHealthCheckResource.SELF_PATH);
         		
 		String responseAsString = target.request(MediaType.TEXT_PLAIN).get(String.class);
         
-		assertEquals(ROOTResource.GET_RESPONSE,responseAsString);
+		assertEquals(EchoHealthCheckResource.GET_RESPONSE,responseAsString);
 	}
 }
