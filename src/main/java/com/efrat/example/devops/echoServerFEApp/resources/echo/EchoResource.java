@@ -16,10 +16,10 @@ import com.efrat.example.devops.echoServerFEApp.rsi.grpc.echo.EchoServiceFacadeF
  * @author tmeltse
  *
  */
-@Path("echo")
+@Path("/echo")
 public class EchoResource 
 {
-	public static final String SELF_PATH = "echo";
+	public static final String SELF_PATH = "/echo";
 
 	/**
 	 *
