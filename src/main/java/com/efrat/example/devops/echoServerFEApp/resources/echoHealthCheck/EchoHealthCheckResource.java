@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.efrat.example.devops.echoServerFEApp.resources.ROOT;
+package com.efrat.example.devops.echoServerFEApp.resources.echoHealthCheck;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,16 +12,16 @@ import javax.ws.rs.core.MediaType;
  * @author tmeltse
  *
  */
-@Path("/")
-public class ROOTResource 
+@Path("/echo/health")
+public class EchoHealthCheckResource 
 {
-	public static final String SELF_PATH = "/";
+	public static final String SELF_PATH = "/echo/health";
 	public static final String GET_RESPONSE = "I'm Alive!";
 	
 	/**
 	 * 
 	 */
-	public ROOTResource() 
+	public EchoHealthCheckResource() 
 	{
 		// TODO Auto-generated constructor stub
 	}
