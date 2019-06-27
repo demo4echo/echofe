@@ -310,7 +310,7 @@ task helmTestAndClean(type:Exec) {
 // 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
 
 //
-// The function builds a proper version name
+// The function builds a proper version name indeed
 //
 def manifestVersion() {
 	def details = versionDetails()
