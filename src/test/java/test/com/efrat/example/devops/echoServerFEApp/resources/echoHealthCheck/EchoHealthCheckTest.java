@@ -63,7 +63,7 @@ public class EchoHealthCheckTest
 	 * Test method for {@link com.efrat.example.devops.echoServerFEApp.resources.echoHealthCheck.EchoHealthCheckResource#getROOT()}.
 	 */
 	@Test
-	public final void testGetROOT() 
+	public final void testGetEchoHealthCheck() 
 	{
 		System.out.println("com.efrat.echofe.serviceEndPoint system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
 
