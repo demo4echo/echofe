@@ -61,14 +61,14 @@ pipeline {
 				sh './gradlew test --no-daemon'
 			}
 		}
-		stage('\u277D uninstall \u2728') {//\u1F3F3
-			when {
-				environment name: 'CLOUD_NAME', value: 'development'
-			}
-			steps {
-				sh './gradlew helmUninstall --no-daemon'
-			}
-		}
+//		stage('\u277D uninstall \u2728') {//\u1F3F3
+//			when {
+//				environment name: 'CLOUD_NAME', value: 'development'
+//			}
+//			steps {
+//				sh './gradlew helmUninstall --no-daemon'
+//			}
+//		}
 	}
 	post {
 		always {
