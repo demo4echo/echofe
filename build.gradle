@@ -254,7 +254,6 @@ helm {
 		values.put 'externalEchobeHost',echobeServiceEndPointHost
 		values.put 'externalEchobePort',echobeServiceEndPointPort
 		values.put 'engageMockupRemoteInterfaces',engageMockupRemoteInterfaces
-		values.put 'productVersion',productVersion
 	}
 
 	charts {
