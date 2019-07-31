@@ -37,7 +37,7 @@ spec:
   ports:
   - name: http
     protocol: TCP
-    nodePort: 30999 # Set the port to be exposed on each port
+    nodePort: 30999 # Set the port to be exposed on each node
     port: 9999
     targetPort: 9999
 ---

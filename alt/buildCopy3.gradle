@@ -10,10 +10,7 @@ plugins
 {
    // Apply the java-library plugin to add support for Java Library
 	id 'java-library'
-
-	// Apply the eclipse plugin to add support for Eclipse
-	id 'eclipse'
-
+	
 	// gradle-docker plugins
 	id 'com.palantir.docker' version '0.21.0'
 	id 'com.palantir.docker-run' version '0.21.0'
@@ -30,15 +27,63 @@ plugins
 	
 	// Gradle Download Task
 	id "de.undercouch.download" version '3.4.3'
-	
-	// ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier gradle versions
-	id 'com.google.protobuf' version '0.8.8'
+
+	// gradle-apt-plugin and gradle-apt-eclipse-plugin
+	// Also need to run the following Eclipse tasks:
+	// 	(*) eclipseJdtApt
+	// 	(*) eclipseFactorypath
+	// 	(*) eclipseJdt
+//	id "net.ltgt.apt" version "0.21"
+//	id "net.ltgt.apt-eclipse" version "0.21"
 }
 
-// Updating the version in our release process.
-def grpcVersion = '1.21.0'
-def protobufVersion = '3.7.1'
-def protocVersion = protobufVersion
+dependencies
+{
+	// Use JUnit test framework
+	testImplementation 'junit:junit:4.12'
+
+	// Jersey
+	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
+	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
+	
+	// HK2	
+//	compile group: 'javax.inject', name: 'javax.inject', version: '1'
+//	compile group: 'org.glassfish.hk2', name: 'hk2-utils', version: '2.5.0'
+//	compile group: 'org.glassfish.hk2', name: 'hk2-api', version: '2.5.0'
+//	compile group: 'org.glassfish.hk2', name: 'hk2-metadata-generator', version: '2.5.0'
+  
+//	testCompile group: 'javax.inject', name: 'javax.inject', version: '1'
+//	testCompile group: 'org.glassfish.hk2', name: 'hk2-utils', version: '2.5.0'
+//	testCompile group: 'org.glassfish.hk2', name: 'hk2-api', version: '2.5.0'
+//	testCompile group: 'org.glassfish.hk2', name: 'hk2-metadata-generator', version: '2.5.0'
+	
+	// Dagger2 - begin
+//	compile("com.google.dagger:dagger:2.23.1")
+//	annotationProcessor("com.google.dagger:dagger-compiler:2.23.1")
+
+	// auto-factory contains both annotations and their processor, neither is needed at runtime
+//	compileOnly("com.google.auto.factory:auto-factory:1.0-beta6")
+//	annotationProcessor("com.google.auto.factory:auto-factory:1.0-beta6")
+
+//	compileOnly("org.immutables:value-annotations:2.7.5")
+//	annotationProcessor("org.immutables:value:2.7.5")
+	// Dagger2 - end
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories
+{
+	// Use jcenter for resolving your dependencies.
+	// You can declare any Maven/Ivy/file repository here.
+	jcenter()
+}
+
+// Workaround for https://github.com/gradle/gradle/issues/4956
+//sourceSets.configureEach { sourceSet ->
+//	tasks.named(sourceSet.compileJavaTaskName).configure {
+//		options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/${sourceSet.name}")
+//	}
+//}
 
 // Adding some properties
 ext {
@@ -51,123 +96,32 @@ ext {
 	productInternalPort = "9999"
 	productExternalPort = "30999"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
-	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
-	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
 }
 
-dependencies
-{
-	// Use JUnit test framework
-	testImplementation 'junit:junit:4.12'
-
-	// Jersey
-	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
-	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
-
-	// The production code uses the SLF4J logging API at compile time
-	compile 'org.slf4j:slf4j-api:1.7.25'
-
-	// gRPC
-	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
-	implementation "io.grpc:grpc-stub:${grpcVersion}"
-	compileOnly "javax.annotation:javax.annotation-api:1.2"
-	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
-	
-	// ProtoC
-	protobuf files("${externalEchoBeProtoFolderPath}")
-}
-
-// In this section you declare where to find the dependencies of your project
-repositories
-{
-	// Use jcenter for resolving your dependencies.
-	// You can declare any Maven/Ivy/file repository here.
-	jcenter()
-}
-
-// Configure protobuf
-protobuf {
-	protoc { 
-   	artifact = "com.google.protobuf:protoc:${protocVersion}" 
-   }
-	plugins {
-		grpc { 
-			artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" 
-		}
+// Download shared resources (list) with other repositories
+task downloadProtoFiles {
+	// Download directory listing via GitHub API
+	def dir = "https://api.github.com/repos/tmeltser/echobe/contents/src/main/proto"
+	def contentsFile = new File("${buildDir}/tmp","proto_directory_contents.json")
+	download {
+		src dir
+		dest contentsFile
 	}
-	generateProtoTasks {
-		all()*.plugins { 
-			grpc {} 
-		}
+
+	// Parse directory listing
+	def contents = new groovy.json.JsonSlurper().parseFile(contentsFile, "utf-8")
+	def urls = contents.collect { it.download_url }
+
+	// Download files
+	download {
+		src urls
+		dest "${buildDir}/ext/main/proto"
+//		overwrite true
+		onlyIfModified true
 	}
-}
 
-// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
-sourceSets {
-	main {
-		java {
-			srcDirs buildDir.getName() + "/generated/source/proto/main/grpc"
-			srcDirs buildDir.getName() + "/generated/source/proto/main/java"
-		}
-//		proto {
-//			srcDirs "${externalEchoBeProtoFolderPath}"
-//		}
-	}
-}
-
-/* ----------------------------------------------------------------------------
- *
- *  Additional parts from EGradle template for comfortable eclipse setup
- *  (necessary, because every EGradle template MUST be importable out of the box)
- * 
- * ---------------------------------------------------------------------------- */
-
-// To have javadocs in eclipse added - where no sources are available - we need these lines:
-// see https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseClasspath.html
-eclipse {	 
-	classpath {
-		downloadSources = true // default: true
-		downloadJavadoc = true // default: false
-	}
-} 
-
-// first define an array containing source folders to be always available - even when not existing already
-def eclipseSourceFolders = [
-	'src/main/java',
-	'src/main/resources',
-	'src/test/java',
-	'src/test/resources'
-];
-
-// now create those source folders when not existing, when eclipse task is executed:
-tasks.eclipse.dependsOn << {	
-	for (String sourceFolder: eclipseSourceFolders) { 
-		def resourceDir = new File(project.projectDir, sourceFolder)
-		
-		if (!resourceDir.exists() && !resourceDir.mkdirs()) {
-    		logger.info("Not able to create %1",resourceDir);
-    	}
-	}
-}
-
-// Download shared resource with other repositories
-task downloadEchoBeProtoFile(type: Download) {
-//	def details = versionDetails()
-	
-//	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
-	src "https://raw.githubusercontent.com/tmeltser/echobe/integration/src/main/proto/echo.proto"
-	dest "${externalEchoBeProtoFilePath}"
-//	overwrite true
-	onlyIfModified true
-}
-
-// Define an Initializer task
-task initializer(dependsOn: 'downloadEchoBeProtoFile')
-
-// Make every other task depend on 'initializer'
-// matching() and all() are "live" so any tasks declared after this line will also depend on 'initializer'
-tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile' }.all { 
-	Task task -> task.dependsOn initializer
+	// Delete downloaded directory listing
+	contentsFile.delete()
 }
 
 // Create an uber jar
@@ -199,7 +153,7 @@ docker {
 	tag "privateRegistry", "${productRepository}:${productVersion}"	// For DockerHub registry
 	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}",PRODUCT_INTERNAL_PORT:"${productInternalPort}"])
 	files jar.outputs
-	copySpec.into(buildDir.getName() + "/libs")
+	copySpec.into("${buildDir}/libs")
 //	pull true
 //	noCache true
 }
@@ -212,9 +166,6 @@ dockerRun {
 	image "${productName}:${productVersion}"
 	ports "${productExternalPort}:${productInternalPort}"
 	env 'INTERNAL_PORT_ENV_VAR':"${productInternalPort}"
-	env 'EXTERNAL_ECHOBE_HOST_ENV_VAR':echobeServiceEndPointHost
-	env 'EXTERNAL_ECHOBE_PORT_ENV_VAR':echobeServiceEndPointPort
-	env 'ENGAGE_MOCKUP_REMOTE_INTERFACES':engageMockupRemoteInterfaces
 	daemonize true
 	clean true
 }
@@ -233,16 +184,13 @@ helm {
 	home = file("$System.env.HOME/.helm")
 	debug = true
 
-	tiller {
-		// Don't install the server
-		install = false
-
+//	tiller {
 		// Install/expect Tiller in a different namespace than kube-system
 //		namespace = "custom-namespace"
 
 		// Set a service account for Tiller
 //		serviceAccount = "tiller-service-account"
-	}
+//	}
 
 	filtering {
 		// These values will be resolvable in all charts' YAML files (e.g. imageTag => ${productVersion})
@@ -251,9 +199,6 @@ helm {
 		values.put 'servicePort',"${productInternalPort}"
 		values.put 'serviceTargetPort',"${productInternalPort}"
 		values.put 'serviceNodePort',"${productExternalPort}"
-		values.put 'externalEchobeHost',echobeServiceEndPointHost
-		values.put 'externalEchobePort',echobeServiceEndPointPort
-		values.put 'engageMockupRemoteInterfaces',engageMockupRemoteInterfaces
 	}
 
 	charts {
@@ -273,13 +218,8 @@ helm {
 	releases {
 		echofe {
 			from charts.echofe
-			
-			// If true, the associated helmDelete task will purge the release, completely removing the release from the store and making its name free for later use
 			purge = true
-
-			// If true, the associated helmInstall task will replace an existing release with the same name (using helm install --replace instead of helm upgrade --install).			
-//			replace = true 
-						
+			
 			// If true, perform a dry run 
 //			dryRun = true
 			
@@ -318,8 +258,8 @@ def manifestVersion() {
 	// This doesn't work under Jenkins as it doesn't fetch the tags
 //	return "${details.lastTag}.${details.branchName}"
 	
-	// An alternative (can also be "0.1.0-demo.${details.branchName}")
-	return "0.1.0-${details.branchName}"
+	// An alternative (can also be "v0.1.0-demo.${details.branchName}")
+	return "v0.1.0-${details.branchName}"
 
 //	println "last tag is: ${details.lastTag}"
 //	println "commitDistance is: ${details.commitDistance}"

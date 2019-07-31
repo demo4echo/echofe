@@ -7,6 +7,9 @@ metadata:
     helm.sh/chart: {{ include "echofe.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+#  annotations:
+#    external-dns.alpha.kubernetes.io/hostname: {{ include "echofe.name" . }}-k8s-stage.il-labs.mavenir.com.
+#    external-dns.alpha.kubernetes.io/ttl: "15"
 spec:
   type: {{ .Values.service.type }}
   selector:

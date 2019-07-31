@@ -25,15 +25,24 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 9999
+              containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
+          env:
+            - name: INTERNAL_PORT_ENV_VAR
+              value: "{{ .Values.service.targetPort }}"
+            - name: EXTERNAL_ECHOBE_HOST_ENV_VAR
+              value: "{{ .Values.deployment.env.echobeHost }}"
+            - name: EXTERNAL_ECHOBE_PORT_ENV_VAR
+              value: "{{ .Values.deployment.env.echobePort }}"
+            - name: ENGAGE_MOCKUP_REMOTE_INTERFACES
+              value: "{{ .Values.deployment.env.mockupRemoteInterfaces }}"
           readinessProbe:
             httpGet:
-              path: /
+              path: /{{ .Values.healthCheckRelativePath }}
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /{{ .Values.healthCheckRelativePath }}
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
