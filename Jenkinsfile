@@ -156,7 +156,7 @@ def resolveNamespaceByBranchName() {
 //
 def assessNamespace() {
 	def targetNamespace = resolveNamespaceByBranchName()
-	def stdout = new StringBuilder(), stderr = new StringBuilder()
+	def stdout = new String(), stderr = new String()
 	def process = 'kubectl get namespace ${targetNamespace}'.execute()
 	
 	// Check if the namespace is defined
@@ -181,7 +181,7 @@ def assessNamespace() {
 //
 def assembleNamespace() {
 	def doesTargetNamespaceExist = assessNamespace()
-	def stdout = new StringBuilder(), stderr = new StringBuilder()
+	def stdout = new String(), stderr = new String()
 	
 	// If namespace doesn't exist, create it
 	if (doesTargetNamespaceExist == false) {
@@ -203,7 +203,7 @@ def assembleNamespace() {
 //
 def disperseNamespace() {
 	def doesTargetNamespaceExist = assessNamespace()
-	def stdout = new StringBuilder(), stderr = new StringBuilder()
+	def stdout = new String(), stderr = new String()
 
 	// If namespace exists, delete it
 	if (doesTargetNamespaceExist == true) {
