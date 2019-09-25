@@ -156,13 +156,14 @@ def resolveNamespaceByBranchName() {
 //
 def assessNamespace() {
 	def targetNamespace = resolveNamespaceByBranchName()
-	def stdout = new String(), stderr = new String()
+//	def stdout = new String(), stderr = new String()
 	def process = 'kubectl get namespace ${targetNamespace}'.execute()
 	
 	// Check if the namespace is defined
-	process.consumeProcessOutput(stdout, stderr)
+//	process.consumeProcessOutput(stdout, stderr)
 	process.waitForOrKill(1000)
-	println "out> $stdout\nerr> $stderr"
+//	println "out> $stdout\nerr> $stderr"
+	println "Process output is: $process.text"
 	
 	def exitCode = process.exitValue()
 	println "exitCode> $exitCode"
@@ -181,14 +182,15 @@ def assessNamespace() {
 //
 def assembleNamespace() {
 	def doesTargetNamespaceExist = assessNamespace()
-	def stdout = new String(), stderr = new String()
+//	def stdout = new String(), stderr = new String()
 	
 	// If namespace doesn't exist, create it
 	if (doesTargetNamespaceExist == false) {
 		def process = 'kubectl create namespace ${targetNamespace}'.execute()
-		process.consumeProcessOutput(stdout, stderr)
+//		process.consumeProcessOutput(stdout, stderr)
 		process.waitForOrKill(1000)
-		println "out> $stdout\nerr> $stderr"
+//		println "out> $stdout\nerr> $stderr"
+		println "Process output is: $process.text"
 		
 		def exitCode = process.exitValue()
 		println "exitCode> $exitCode"
@@ -203,14 +205,15 @@ def assembleNamespace() {
 //
 def disperseNamespace() {
 	def doesTargetNamespaceExist = assessNamespace()
-	def stdout = new String(), stderr = new String()
+//	def stdout = new String(), stderr = new String()
 
 	// If namespace exists, delete it
 	if (doesTargetNamespaceExist == true) {
 		def process = 'kubectl delete namespace ${targetNamespace}'.execute()
-		process.consumeProcessOutput(stdout, stderr)
+//		process.consumeProcessOutput(stdout, stderr)
 		process.waitForOrKill(1000)
-		println "out> $stdout\nerr> $stderr"
+//		println "out> $stdout\nerr> $stderr"
+		println "Process output is: $process.text"
 		
 		def exitCode = process.exitValue()
 		println "exitCode> $exitCode"
