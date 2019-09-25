@@ -53,6 +53,8 @@ ext {
 	productK8ShelmChartsFolder = "k8s/helm/charts"
 	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
+	productionBranchName = "master"
+	stagingBranchName = "integration"
 }
 
 dependencies
@@ -274,6 +276,9 @@ helm {
 		echofe {
 			from charts.echofe
 			
+			// Namespace to install the release into. Defaults to the current kube config namespace.
+			namespace = manifestNamespace()
+			
 			// If true, the associated helmDelete task will purge the release, completely removing the release from the store and making its name free for later use
 			purge = true
 
@@ -327,6 +332,21 @@ def manifestVersion() {
 //	println "gitHashFull is: ${details.gitHashFull}" // full 40-character Git commit hash
 //	println "branchName is: ${details.branchName}" // is null if the repository in detached HEAD mode
 //	println "isCleanTag is: ${details.isCleanTag}"	
+}
+
+//
+// Construct an applicable namespace to be used by the Helm Chart
+//
+def manifestNamespace() {
+	def details = versionDetails()
+	def namespace = details.branchName 
+
+	// If we are on the production or staging branches return the regular name ($serviceName), else return the branch namne itself
+	if (details.branchName == "${productionBranchName}" || details.branchName == "${stagingBranchName}") {
+		namespace = serviceName
+	}
+	
+	return namespace
 }
 
 description = 'The Echo Frontend demo product'
