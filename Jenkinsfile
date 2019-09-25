@@ -5,6 +5,7 @@ pipeline {
 			label 'jenkins-slave-pod-agent'
 			defaultContainer 'jdk-gradle-docker-k8s-helm'
 			yamlFile 'Jenkinsfile.JenkinsSlaveManifest.yaml'
+			namespace assembleNamespace()
 		}
 	}
 	options { 
@@ -73,6 +74,15 @@ pipeline {
 	post {
 		always {
 			echo 'One way or another, I have finished'
+			
+			script {
+				// Delete the target namespace only if in development area
+				if (env.CLOUD_NAME == 'development') {
+					def targetNamespace = resolveNamespaceByBranchName()
+					echo 'Going to delete target namespace: [${targetNamespace}]'
+					disperseNamespace()		    
+				}
+			}
 		}
 		success {
 			echo 'I succeeeded!'
@@ -116,6 +126,98 @@ def resolveCloudNameByBranchName() {
 		// Return the resolved cloud name
 		return env.CLOUD_NAME
 	}
+}
+
+//
+// Determine the applicable k8s namespace (for running the Jenkins Slave Pod (mentioned above))
+//
+def resolveNamespaceByBranchName() {
+	node {
+		println "Within resolveNamespaceByBranchName() => Node name is: [${env.NODE_NAME}]"
+
+		println "Branch name is: [${env.BRANCH_NAME}]"
+
+		if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'integration') {                 
+			env.RESOLVED_NAMESPACE = 'demo4echo'
+		}
+		else {
+			env.RESOLVED_NAMESPACE = env.BRANCH_NAME
+		}
+		
+		println "Resolved namespace is: [${env.RESOLVED_NAMESPACE}]"
+		
+		// Return the resolved namespsace
+		return env.RESOLVED_NAMESPACE
+	}
+}
+
+//
+// Check if the target namespace exists, returns true if it exists, false otherwise
+//
+def assessNamespace() {
+	def targetNamespace = resolveNamespaceByBranchName()
+	def stdout = new StringBuilder(), stderr = new StringBuilder()
+	def process = 'kubectl get namespace ${targetNamespace}'.execute()
+	
+	// Check if the namespace is defined
+	process.consumeProcessOutput(stdout, stderr)
+	process.waitForOrKill(1000)
+	println "out> $stdout\nerr> $stderr"
+	
+	def exitCode = process.exitValue()
+	println "exitCode> $exitCode"
+
+	// Return the result
+	if (exitCode == 0) {
+		return true
+	}
+	else {
+		return false
+	}
+}
+
+//
+// Ensure the target namespace is defined
+//
+def assembleNamespace() {
+	def doesTargetNamespaceExist = assessNamespace()
+	def stdout = new StringBuilder(), stderr = new StringBuilder()
+	
+	// If namespace doesn't exist, create it
+	if (doesTargetNamespaceExist == false) {
+		def process = 'kubectl create namespace ${targetNamespace}'.execute()
+		process.consumeProcessOutput(stdout, stderr)
+		process.waitForOrKill(1000)
+		println "out> $stdout\nerr> $stderr"
+		
+		def exitCode = process.exitValue()
+		println "exitCode> $exitCode"
+	}
+
+	// Return the desired namespace
+	return resolveNamespaceByBranchName()
+}
+
+//
+// Discard the target namespace
+//
+def disperseNamespace() {
+	def doesTargetNamespaceExist = assessNamespace()
+	def stdout = new StringBuilder(), stderr = new StringBuilder()
+
+	// If namespace exists, delete it
+	if (doesTargetNamespaceExist == true) {
+		def process = 'kubectl delete namespace ${targetNamespace}'.execute()
+		process.consumeProcessOutput(stdout, stderr)
+		process.waitForOrKill(1000)
+		println "out> $stdout\nerr> $stderr"
+		
+		def exitCode = process.exitValue()
+		println "exitCode> $exitCode"
+	}
+
+	// Return the deleted namespace
+	return resolveNamespaceByBranchName()
 }
 
 //
