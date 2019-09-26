@@ -133,7 +133,7 @@ def resolveCloudNameByBranchName() {
 }
 
 //
-// Determine the applicable k8s namespace (for running the Jenkins Slave Pod (mentioned above))
+// Determine the namespace the micro service is running in (currently the Jenkins Slave Pod is running in the default namespace)
 //
 def resolveNamespaceByBranchName() {
 	node {
@@ -141,6 +141,7 @@ def resolveNamespaceByBranchName() {
 
 		println "Branch name is: [${env.BRANCH_NAME}]"
 
+		// If we are on the production or staging branches return the regular name (e.g. demo4echo), else return the branch namne itself
 		if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'integration') {                 
 			env.RESOLVED_NAMESPACE = 'demo4echo'
 		}
