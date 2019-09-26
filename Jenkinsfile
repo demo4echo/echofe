@@ -53,7 +53,7 @@ pipeline {
 				}
 			}
 			steps {
-				sh './gradlew helmUninstall --no-daemon'
+//				sh './gradlew helmUninstall --no-daemon'
 				sh './gradlew helmUpdate --no-daemon'
 			}
 		}
