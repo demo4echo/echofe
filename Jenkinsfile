@@ -142,11 +142,10 @@ def resolveNamespaceByBranchName() {
 		println "Within resolveNamespaceByBranchName() => Node name is: [${env.NODE_NAME}]"
 
 		println "Branch name is: [${env.BRANCH_NAME}]"
-		println "Production branch name ENV_VAR is: [${env.PRODUCTION_BRANCH_NAME_ENV_VAR}]"
-		println "Staging branch name ENV_VAR is: [${env.STAGING_BRANCH_NAME_ENV_VAR}]"
 
 		// If we are on the production or staging branches return the regular name (e.g. demo4echo), else return the branch namne itself
-		if (env.BRANCH_NAME == env.PRODUCTION_BRANCH_NAME_ENV_VAR || env.BRANCH_NAME == env.STAGING_BRANCH_NAME_ENV_VAR) {                 
+		// Note: don't use ENV VARs here since they can't be read from their file at this stage!
+		if (env.BRANCH_NAME == 'production' || env.BRANCH_NAME == 'staging') {                 
 			env.RESOLVED_NAMESPACE = env.SERVICE_NAME_ENV_VAR
 		}
 		else {
