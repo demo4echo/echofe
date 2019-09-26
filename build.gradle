@@ -185,10 +185,12 @@ jar {
 
 // Make prints in tests visible
 test {
+	systemProperties = System.properties
+
+	outputs.upToDateWhen {false}
+
 	testLogging {
-		outputs.upToDateWhen {false}
 		showStandardStreams = true
-		systemProperties = System.properties
 	}
 }
 
