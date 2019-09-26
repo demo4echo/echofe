@@ -40,21 +40,22 @@ def grpcVersion = '1.21.0'
 def protobufVersion = '3.7.1'
 def protocVersion = protobufVersion
 
+// Load environment variables
+def envVarsProps = new Properties()
+file("EnvFile.properties").withInputStream { envVarsProps.load(it) }
+
 // Adding some properties
 ext {
-	serviceName = "demo4echo"	// For DockerHub registry
-	productName = "echofe"		// e.g. apigw (one of the microservices of the admin portal)
+	serviceName = envVarsProps.SERVICE_NAME_ENV_VAR
 	productRepository = "${serviceName}/${productName}"
 //	productVersion = "v0.1.0-feature1"
 //	productVersion = gitVersion()
 	productVersion = manifestVersion()
-	productInternalPort = "9999"
-	productExternalPort = "30999"
 	productK8ShelmChartsFolder = "k8s/helm/charts"
 	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
-	productionBranchName = "master"
-	stagingBranchName = "integration"
+	productionBranchName = envVarsProps.PRODUCTION_BRANCH_NAME_ENV_VAR
+	stagingBranchName = envVarsProps.STAGING_BRANCH_NAME_ENV_VAR
 }
 
 dependencies
@@ -185,10 +186,12 @@ jar {
 
 // Make prints in tests visible
 test {
+	systemProperties = System.properties
+
+	outputs.upToDateWhen {false}
+
 	testLogging {
-		outputs.upToDateWhen {false}
 		showStandardStreams = true
-		systemProperties = System.properties
 	}
 }
 
