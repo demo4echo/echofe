@@ -23,9 +23,9 @@ pipeline {
 				sh 'cp -ar ./.kube /root/.kube'
 
 				script {
-					// Print the resolved namespace
+					// Resolve namespace
 					def resolvedNamespace = resolveNamespaceByBranchName()
-					echo 'Resolved namespace is: [${resolvedNamespace}]'
+					echo "Observed namespace: [${resolvedNamespace}]"
 				}
 			}
 		}
@@ -81,7 +81,7 @@ pipeline {
 				environment name: 'CLOUD_NAME', value: 'development'
 			}
 			steps {
-				sh './kubectl delete namespace ${env.RESOLVED_NAMESPACE}'
+				sh "kubectl delete namespace ${env.RESOLVED_NAMESPACE}"
 			}
 		}
 	}
