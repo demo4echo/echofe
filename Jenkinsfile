@@ -23,9 +23,8 @@ pipeline {
 				sh 'cp -ar ./.kube /root/.kube'
 
 				script {
-					// Resolve namespace
-					def resolvedNamespace = resolveNamespaceByBranchName()
-					echo "Observed namespace: [${resolvedNamespace}]"
+					// Ensure target namespace is resolved
+					resolveNamespaceByBranchName()
 				}
 			}
 		}
