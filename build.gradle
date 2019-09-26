@@ -46,7 +46,6 @@ file("EnvFile.properties").withInputStream { envVarsProps.load(it) }
 
 // Adding some properties
 ext {
-//	serviceName = "demo4echo" // For DockerHub registry
 	serviceName = envVarsProps.SERVICE_NAME_ENV_VAR // For DockerHub registry
 	productRepository = "${serviceName}/${productName}"
 //	productVersion = "v0.1.0-feature1"
