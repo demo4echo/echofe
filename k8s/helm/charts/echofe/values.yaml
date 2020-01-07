@@ -25,7 +25,7 @@ deployment:
     mockupRemoteInterfaces: "${engageMockupRemoteInterfaces}"
 
 service:
-  type: NodePort
+  type: "${serviceType}"
   port: "${servicePort}"
   targetPort: "${serviceTargetPort}"
   nodePort: "${serviceNodePort}"

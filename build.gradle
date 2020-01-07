@@ -253,6 +253,7 @@ helm {
 		// These values will be resolvable in all charts' YAML files (e.g. imageTag => ${productVersion})
 		values.put 'imageTag',"${productVersion}"
 		values.put 'imageRepository',"${productRepository}"
+		values.put 'serviceType',"${productServiceType}"
 		values.put 'servicePort',"${productInternalPort}"
 		values.put 'serviceTargetPort',"${productInternalPort}"
 		values.put 'serviceNodePort',"${productExternalPort}"
