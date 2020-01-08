@@ -66,7 +66,8 @@ public class EchoTest
 	@Test
 	public final void testGetEcho() 
 	{
-		System.out.println("com.efrat.echofe.serviceEndPoint system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint") + "]");
+		System.out.println("com.efrat.echofe.serviceEndPoint.internal system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint.internal") + "]");
+		System.out.println("com.efrat.echofe.serviceEndPoint.external system property value is: [" + System.getProperty("com.efrat.echofe.serviceEndPoint.external") + "]");
 
 		String paramForTest = "Golan";
 //		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
@@ -80,7 +81,10 @@ public class EchoTest
 		if (isRunningOutsideTheCluster == true)
 		{
 			baseURI = externalBaseURI;
+			System.out.println("Found MARK_OFF_CLUSTER_INVOCATION_ENV_VAR environment variable - invoking the test in off cluster mode!");
 		}
+
+		System.out.println("baseURI is set as: [" + baseURI + "]");
 		
 		assertNotNull(baseURI);
 		
