@@ -70,7 +70,17 @@ public class EchoTest
 
 		String paramForTest = "Golan";
 //		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint",BASE_URI);
-		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint");
+//		String baseURI = System.getProperty("com.efrat.echofe.serviceEndPoint");
+		String internalBaseURI = System.getProperty("com.efrat.echofe.serviceEndPoint.internal");
+		String externalBaseURI = System.getProperty("com.efrat.echofe.serviceEndPoint.external");
+		String baseURI = internalBaseURI;
+		
+		// Resolve correct service end point and update if running outside the cluster
+		boolean isRunningOutsideTheCluster = System.getenv().containsKey("MARK_OFF_CLUSTER_INVOCATION_ENV_VAR");
+		if (isRunningOutsideTheCluster == true)
+		{
+			baseURI = externalBaseURI;
+		}
 		
 		assertNotNull(baseURI);
 		
