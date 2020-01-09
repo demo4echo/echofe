@@ -15,30 +15,25 @@ plugins
 	id 'eclipse'
 
 	// gradle-docker plugins
-	id 'com.palantir.docker' version '0.21.0'
-	id 'com.palantir.docker-run' version '0.21.0'
+	id 'com.palantir.docker'
+	id 'com.palantir.docker-run'
 
 	// gradle-helm-plugin plugins
-	id 'org.unbroken-dome.helm' version '0.3.0'
-	id 'org.unbroken-dome.helm-releases' version '0.3.0'
+	id 'org.unbroken-dome.helm'
+	id 'org.unbroken-dome.helm-releases'
 	
 	// gradle-jgitver-plugin pluin
 //	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
 	
 	// gradle-git-version plugin
-	id 'com.palantir.git-version' version '0.11.0'
+	id 'com.palantir.git-version'
 	
 	// Gradle Download Task
-	id "de.undercouch.download" version '3.4.3'
+	id 'de.undercouch.download'
 	
 	// ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier gradle versions
-	id 'com.google.protobuf' version '0.8.8'
+	id 'com.google.protobuf'
 }
-
-// Updating the version in our release process.
-def grpcVersion = '1.21.0'
-def protobufVersion = '3.7.1'
-def protocVersion = protobufVersion
 
 // Load environment variables
 def envVarsProps = new Properties()
@@ -61,20 +56,20 @@ ext {
 dependencies
 {
 	// Use JUnit test framework
-	testImplementation 'junit:junit:4.12'
-
+	testImplementation "junit:junit:${dep_junit_version}"
+	
 	// Jersey
-	implementation 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.27'
-	implementation 'org.glassfish.jersey.inject:jersey-hk2:2.27'
+	implementation "org.glassfish.jersey.containers:jersey-container-grizzly2-http:${dep_jersey_version}"
+	implementation "org.glassfish.jersey.inject:jersey-hk2:${dep_jersey_version}"
 
 	// The production code uses the SLF4J logging API at compile time
-	compile 'org.slf4j:slf4j-api:1.7.25'
+	compile "org.slf4j:slf4j-api:${dep_slf4j_version}"
 
 	// gRPC
-	implementation "io.grpc:grpc-protobuf:${grpcVersion}"
-	implementation "io.grpc:grpc-stub:${grpcVersion}"
-	compileOnly "javax.annotation:javax.annotation-api:1.2"
-	runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+	implementation "io.grpc:grpc-protobuf:${dep_grpc_version}"
+	implementation "io.grpc:grpc-stub:${dep_grpc_version}"
+	compileOnly "javax.annotation:javax.annotation-api:${dep_javax_annotation_version}"
+	runtimeOnly "io.grpc:grpc-netty-shaded:${dep_grpc_version}"
 	
 	// ProtoC
 	protobuf files("${externalEchoBeProtoFolderPath}")
@@ -91,11 +86,11 @@ repositories
 // Configure protobuf
 protobuf {
 	protoc { 
-   	artifact = "com.google.protobuf:protoc:${protocVersion}" 
+   	artifact = "com.google.protobuf:protoc:${dep_protoc_version}" 
    }
 	plugins {
 		grpc { 
-			artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" 
+			artifact = "io.grpc:protoc-gen-grpc-java:${dep_grpc_version}" 
 		}
 	}
 	generateProtoTasks {
@@ -155,10 +150,9 @@ tasks.eclipse.dependsOn << {
 
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
-//	def details = versionDetails()
+	def details = versionDetails()
 	
-//	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
-	src "https://raw.githubusercontent.com/tmeltser/echobe/integration/src/main/proto/echo.proto"
+	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
 	dest "${externalEchoBeProtoFilePath}"
 //	overwrite true
 	onlyIfModified true
@@ -235,7 +229,7 @@ task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
 //
 
 helm {
-	home = file("$System.env.HOME/.helm")
+	home = file("${System.properties['user.home']}${File.separator}.helm")
 	debug = true
 
 	tiller {
