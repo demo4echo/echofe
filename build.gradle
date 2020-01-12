@@ -308,9 +308,11 @@ task helmTestAndClean(type:Exec) {
 	args "test","${productName}","--cleanup"
 }
 
+task certify(dependsOn: 'test')
+
 // Master task that runs a complete flow (like the Jenkins Pipeline)
-//task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','helmTestAndClean','test']) // Task 'helmTestAndClean' doesn't run in expected place!
-task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','test'])
+//task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','helmTestAndClean','certify']) // Task 'helmTestAndClean' doesn't run in expected place!
+task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','certify'])
 
 // Notes:
 // 1. helmPackge and helmInstall tasks are used as is
