@@ -60,6 +60,7 @@ pipeline {
 		stage('\u277B verify \u2728') {
 			steps {
 				sh './gradlew helmTestAndClean'
+			}
 		}
 		stage('\u277C certify \u2728') {//\u1F321
 			steps {
