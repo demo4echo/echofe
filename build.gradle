@@ -14,6 +14,9 @@ plugins
 	// Apply the eclipse plugin to add support for Eclipse
 	id 'eclipse'
 
+	// taskTree plugin
+	id 'com.dorongold.task-tree'
+
 	// gradle-docker plugins
 	id 'com.palantir.docker'
 	id 'com.palantir.docker-run'
@@ -312,7 +315,13 @@ task certify(dependsOn: 'test')
 
 // Master task that runs a complete flow (like the Jenkins Pipeline)
 //task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','helmTestAndClean','certify']) // Task 'helmTestAndClean' doesn't run in expected place!
-task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','certify'])
+//task AIO (dependsOn: [helmZestAndClean,dockerBuildAndPublish,zcertify,helmPackage,helmUpdate])
+task AIO (dependsOn: [dockerBuildAndPublish,helmPackage,helmUpdate,helmTestAndClean,certify]) {
+	helmPackage.mustRunAfter dockerBuildAndPublish
+	helmUpdate.mustRunAfter helmPackage
+	helmTestAndClean.mustRunAfter helmUpdate
+	certify.mustRunAfter helmTestAndClean
+}
 
 // Notes:
 // 1. helmPackge and helmInstall tasks are used as is
