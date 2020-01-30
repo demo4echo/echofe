@@ -25,9 +25,6 @@ plugins
 	id 'org.unbroken-dome.helm'
 	id 'org.unbroken-dome.helm-releases'
 	
-	// gradle-git-version plugin
-	id 'com.palantir.git-version'
-	
 	// Gradle Download Task
 	id 'de.undercouch.download'
 	
