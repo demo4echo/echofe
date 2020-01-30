@@ -126,7 +126,7 @@ helm {
 }
 
 // Master task that runs a complete flow, except publishing the version
-task AIO (dependsOn: [dockerBuildAndPublish,helmPackage,helmUpdate,helmTestAndClean,certify]) {
+task DR (dependsOn: [dockerBuildAndPublish,helmPackage,helmUpdate,helmTestAndClean,certify]) {
 	helmPackage.mustRunAfter dockerBuildAndPublish
 
 	helmUpdate.mustRunAfter helmPackage
