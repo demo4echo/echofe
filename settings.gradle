@@ -20,4 +20,4 @@ pluginManagement {
   	}
 }
 
-rootProject.name = 'CI-CD_EchoServerFE'
+//rootProject.name = 'CI-CD_EchoServerFE'

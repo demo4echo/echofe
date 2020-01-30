@@ -25,9 +25,6 @@ plugins
 	id 'org.unbroken-dome.helm'
 	id 'org.unbroken-dome.helm-releases'
 	
-	// gradle-jgitver-plugin pluin
-//	id 'fr.brouillard.oss.gradle.jgitver' version '0.8.0'
-	
 	// gradle-git-version plugin
 	id 'com.palantir.git-version'
 	
@@ -38,22 +35,10 @@ plugins
 	id 'com.google.protobuf'
 }
 
-// Load environment variables
-def envVarsProps = new Properties()
-file("EnvFile.properties").withInputStream { envVarsProps.load(it) }
-
-// Adding some properties
+// Adding some specific properties
 ext {
-	serviceName = envVarsProps.SERVICE_NAME_ENV_VAR
-	productRepository = "${serviceName}/${productName}"
-//	productVersion = "v0.1.0-feature1"
-//	productVersion = gitVersion()
-	productVersion = manifestVersion()
-	productK8ShelmChartsFolder = "k8s/helm/charts"
 	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
-	productionBranchName = envVarsProps.PRODUCTION_BRANCH_NAME_ENV_VAR
-	stagingBranchName = envVarsProps.STAGING_BRANCH_NAME_ENV_VAR
 }
 
 dependencies
@@ -78,78 +63,9 @@ dependencies
 	protobuf files("${externalEchoBeProtoFolderPath}")
 }
 
-// In this section you declare where to find the dependencies of your project
-repositories
-{
-	// Use jcenter for resolving your dependencies.
-	// You can declare any Maven/Ivy/file repository here.
-	jcenter()
-}
-
-// Configure protobuf
-protobuf {
-	protoc { 
-   	artifact = "com.google.protobuf:protoc:${dep_protoc_version}" 
-   }
-	plugins {
-		grpc { 
-			artifact = "io.grpc:protoc-gen-grpc-java:${dep_grpc_version}" 
-		}
-	}
-	generateProtoTasks {
-		all()*.plugins { 
-			grpc {} 
-		}
-	}
-}
-
-// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
-sourceSets {
-	main {
-		java {
-			srcDirs buildDir.getName() + "/generated/source/proto/main/grpc"
-			srcDirs buildDir.getName() + "/generated/source/proto/main/java"
-		}
-//		proto {
-//			srcDirs "${externalEchoBeProtoFolderPath}"
-//		}
-	}
-}
-
-/* ----------------------------------------------------------------------------
- *
- *  Additional parts from EGradle template for comfortable eclipse setup
- *  (necessary, because every EGradle template MUST be importable out of the box)
- * 
- * ---------------------------------------------------------------------------- */
-
-// To have javadocs in eclipse added - where no sources are available - we need these lines:
-// see https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.eclipse.model.EclipseClasspath.html
-eclipse {	 
-	classpath {
-		downloadSources = true // default: true
-		downloadJavadoc = true // default: false
-	}
-} 
-
-// first define an array containing source folders to be always available - even when not existing already
-def eclipseSourceFolders = [
-	'src/main/java',
-	'src/main/resources',
-	'src/test/java',
-	'src/test/resources'
-];
-
-// now create those source folders when not existing, when eclipse task is executed:
-tasks.eclipse.dependsOn << {	
-	for (String sourceFolder: eclipseSourceFolders) { 
-		def resourceDir = new File(project.projectDir, sourceFolder)
-		
-		if (!resourceDir.exists() && !resourceDir.mkdirs()) {
-    		logger.info("Not able to create %1",resourceDir);
-    	}
-	}
-}
+//
+// Make specific adjustments
+//
 
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
@@ -170,197 +86,33 @@ tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile
 	Task task -> task.dependsOn initializer
 }
 
-// Create an uber jar
-jar {
-	manifest	{
-   	attributes "Main-Class": "com.efrat.example.devops.echoServerFEApp.EchoServerFEApp"
-	}
-
-	from	{
-		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-}
-
-// Make prints in tests visible
-test {
-	systemProperties = System.properties
-
-	outputs.upToDateWhen {false}
-
-	testLogging {
-		showStandardStreams = true
-	}
-}
-
-//
-// docker
-//
-
-docker {
-	name "${productName}:${productVersion}"
-	tag "privateRegistry", "${productRepository}:${productVersion}"	// For DockerHub registry
-	buildArgs([JAR_PRODUCT_NAME:"${project.name}",JAR_PRODUCT_VERSION:"${productVersion}",PRODUCT_INTERNAL_PORT:"${productInternalPort}"])
-	files jar.outputs
-	copySpec.into(buildDir.getName() + "/libs")
-//	pull true
-//	noCache true
-}
-
-// Give an alias to docker task
-task dockerBuild(dependsOn: ['jar','docker'])
-
+// Adjust Docker
 dockerRun {
-	name "${productName}"
-	image "${productName}:${productVersion}"
-	ports "${productExternalPort}:${productInternalPort}"
-	env 'INTERNAL_PORT_ENV_VAR':"${productInternalPort}"
 	env 'EXTERNAL_ECHOBE_HOST_ENV_VAR':echobeServiceEndPointHost
 	env 'EXTERNAL_ECHOBE_PORT_ENV_VAR':echobeServiceEndPointPort
 	env 'ENGAGE_MOCKUP_REMOTE_INTERFACES':engageMockupRemoteInterfaces
-	daemonize true
-	clean true
 }
 
-// Main task used from docker plugins
-task dockerBuildAndPublish(dependsOn: 'dockerPushPrivateRegistry')
-
-// Give an alias to dockerRun task
-task dockerStart(dependsOn: ['dockerBuild','dockerRun'])
-
-//
-// helm
-//
-
+// Adjust Helm
 helm {
-	home = file("${System.properties['user.home']}${File.separator}.helm")
-	debug = true
-
-	tiller {
-		// Don't install the server
-		install = false
-
-		// Install/expect Tiller in a different namespace than kube-system
-//		namespace = "custom-namespace"
-
-		// Set a service account for Tiller
-//		serviceAccount = "tiller-service-account"
-	}
-
 	filtering {
 		// These values will be resolvable in all charts' YAML files (e.g. imageTag => ${productVersion})
-		values.put 'imageTag',"${productVersion}"
-		values.put 'imageRepository',"${productRepository}"
-		values.put 'serviceType',"${productServiceType}"
-		values.put 'servicePort',"${productInternalPort}"
-		values.put 'serviceTargetPort',"${productInternalPort}"
-		values.put 'serviceNodePort',"${productExternalPort}"
+		values.put 'serviceType',productServiceType
 		values.put 'externalEchobeHost',echobeServiceEndPointHost
 		values.put 'externalEchobePort',echobeServiceEndPointPort
 		values.put 'engageMockupRemoteInterfaces',engageMockupRemoteInterfaces
 	}
-
-	charts {
-		echofe {
-			chartVersion = "${productVersion}"
-			sourceDir = file("${productK8ShelmChartsFolder}/${productName}")
-		}
-	}
-
-	lint {
-		// enable/disable linting by default
-		enabled = true
-		// treat linter warnings as errors (failing the build)
-		strict = true
-	}
-
-	releases {
-		echofe {
-			from charts.echofe
-			
-			// Namespace to install the release into. Defaults to the current kube config namespace.
-			namespace = manifestNamespace()
-
-			// If true, the associated helmDelete task will purge the release, completely removing the release from the store and making its name free for later use
-			purge = true
-
-			// If true, the associated helmInstall task will replace an existing release with the same name (using helm install --replace instead of helm upgrade --install).			
-//			replace = true 
-						
-			// If true, perform a dry run 
-//			dryRun = true
-			
-			// pass values (like --set on the command line)
-//			values = ['image.tag':"${productVersion}"]
-
-			// If true, will wait until all Pods, PVCs, Services, and minimum number of Pods of a Deployment are in a ready state before marking the release as successful
-			wait = true
-		}
-	}
 }
-
-task helmUpdate(dependsOn: 'helmInstall')
-task helmUninstall(dependsOn: 'helmDelete')
-
-task helmTest(type:Exec) {
-	executable "helm"
-	args "test","${productName}"
-}
-
-task helmTestAndClean(type:Exec) {
-	executable "helm"
-	args "test","${productName}","--cleanup"
-}
-
-task certify(dependsOn: 'test')
 
 // Master task that runs a complete flow (like the Jenkins Pipeline)
-//task AIO (dependsOn: ['dockerBuildAndPublish','helmPackage','helmUpdate','helmTestAndClean','certify']) // Task 'helmTestAndClean' doesn't run in expected place!
-//task AIO (dependsOn: [helmZestAndClean,dockerBuildAndPublish,zcertify,helmPackage,helmUpdate])
-task AIO (dependsOn: [dockerBuildAndPublish,helmPackage,helmUpdate,helmTestAndClean,certify]) {
+task AIO (dependsOn: [dockerBuildAndPublish,helmPackage,helmUpdate,helmTestAndClean,certify,publishVersion]) {
 	helmPackage.mustRunAfter dockerBuildAndPublish
+
 	helmUpdate.mustRunAfter helmPackage
+
 	helmTestAndClean.mustRunAfter helmUpdate
+
 	certify.mustRunAfter helmTestAndClean
-}
-
-// Notes:
-// 1. helmPackge and helmInstall tasks are used as is
-// 2. helmInstall and helmUninstall (helmDelete) can be used with "-Phelm.dryRun"
-
-//
-// The function builds a proper version name
-//
-def manifestVersion() {
-	def details = versionDetails()
-
-	// This doesn't work under Jenkins as it doesn't fetch the tags
-//	return "${details.lastTag}.${details.branchName}"
 	
-	// An alternative (can also be "0.1.0-demo.${details.branchName}")
-	return "0.1.0-${details.branchName}"
-
-//	println "last tag is: ${details.lastTag}"
-//	println "commitDistance is: ${details.commitDistance}"
-//	println "gitHash is: ${details.gitHash}"
-//	println "gitHashFull is: ${details.gitHashFull}" // full 40-character Git commit hash
-//	println "branchName is: ${details.branchName}" // is null if the repository in detached HEAD mode
-//	println "isCleanTag is: ${details.isCleanTag}"	
+	publishVersion.mustRunAfter certify
 }
-
-//
-// Construct an applicable namespace to be used by the Helm Chart
-//
-def manifestNamespace() {
-	def details = versionDetails()
-	def namespace = details.branchName 
-
-	// If we are on the production or staging branches return the regular name ($serviceName), else return the branch namne itself
-	if (details.branchName == "${productionBranchName}" || details.branchName == "${stagingBranchName}") {
-		namespace = serviceName
-	}
-	
-	return namespace
-}
-
-description = 'The Echo Frontend demo product'
-version = "${productVersion}"
