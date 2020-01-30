@@ -84,9 +84,9 @@ apply from: "${commonGradleFilePath}"
 
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
-	def details = versionDetails()
+	def branchName = obtainCurrentBranchName()
 	
-	src "https://raw.githubusercontent.com/tmeltser/echobe/${details.branchName}/src/main/proto/echo.proto"
+	src "https://raw.githubusercontent.com/tmeltser/echobe/${branchName}/src/main/proto/echo.proto"
 	dest "${externalEchoBeProtoFilePath}"
 //	overwrite true
 	onlyIfModified true
