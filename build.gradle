@@ -82,6 +82,12 @@ apply from: "${commonGradleFilePath}"
 // Make specific adjustments
 //
 
+jar {
+	manifest {
+		attributes "Main-Class": productMainClass
+	}
+}
+
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
 	def branchName = obtainCurrentBranchName()
