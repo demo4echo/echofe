@@ -70,6 +70,9 @@ dependencies
 	protobuf files("${externalEchoBeProtoFolderPath}")
 }
 
+// Pre-Defined project properties
+project.description = 'The Echo Frontend demo product'
+
 // Load common build logic
 def	commonGradleFilePath = "./${-> commonSubModuleName}/common.gradle"
 apply from: "${commonGradleFilePath}"
