@@ -22,4 +22,5 @@ pluginManagement {
   	}
 }
 
-//rootProject.name = 'CI-CD_EchoServerFE'
+// This settings is mandatory as otherwise it defaults for the root folder name that can be anything!
+rootProject.name = 'echofe'
