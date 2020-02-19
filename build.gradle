@@ -91,7 +91,7 @@ jar {
 task downloadEchoBeProtoFile(type: Download) {
 	def branchName = obtainCurrentBranchName()
 	
-	src "https://raw.githubusercontent.com/tmeltser/echobe/${branchName}/src/main/proto/echo.proto"
+	src "https://raw.githubusercontent.com/demo4echo/echobe/${branchName}/src/main/proto/echo.proto"
 	dest "${externalEchoBeProtoFilePath}"
 //	overwrite true
 	onlyIfModified true
