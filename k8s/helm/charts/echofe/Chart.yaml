@@ -1,8 +1,8 @@
 apiVersion: v1
-name: echofe
+name: ${chartName}
 version: ${chartVersion}
-description: A Helm chart for demo app named Echo FE
-appVersion: ${chartVersion}
+description: ${chartDescription}
+appVersion: ${appVersion}
 maintainers:
-  - name: Tiran Meltser
-    email: tiran.meltser@efrat.com
+  - name: ${maintainer.name}
+    email: ${maintainer.email}
