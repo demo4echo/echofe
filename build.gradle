@@ -24,10 +24,10 @@ plugins
 	// gradle-helm-plugin plugins
 	id 'org.unbroken-dome.helm'
 	id 'org.unbroken-dome.helm-releases'
-	
+
 	// Gradle Download Task
 	id 'de.undercouch.download'
-	
+
 	// ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier gradle versions
 	id 'com.google.protobuf'
 
@@ -38,7 +38,7 @@ plugins
 	// Usage: ./gradlew [TASK] -Preckon.scope=minor|major -Preckon.stage=rc|final (default is minor and first stage in the list (ordered alphabetically)) -Dorg.ajoberstar.grgit.auth.username=<token>
 	id 'org.ajoberstar.reckon'
 
-	// Grgit plugin 
+	// Grgit plugin
 	id 'org.ajoberstar.grgit'
 }
 
@@ -52,7 +52,7 @@ dependencies
 {
 	// Use JUnit test framework
 	testImplementation "junit:junit:${dep_junit_version}"
-	
+
 	// Jersey
 	implementation "org.glassfish.jersey.containers:jersey-container-grizzly2-http:${dep_jersey_version}"
 	implementation "org.glassfish.jersey.inject:jersey-hk2:${dep_jersey_version}"
@@ -65,7 +65,7 @@ dependencies
 	implementation "io.grpc:grpc-stub:${dep_grpc_version}"
 	compileOnly "javax.annotation:javax.annotation-api:${dep_javax_annotation_version}"
 	runtimeOnly "io.grpc:grpc-netty-shaded:${dep_grpc_version}"
-	
+
 	// ProtoC
 	protobuf files("${externalEchoBeProtoFolderPath}")
 }
@@ -90,7 +90,7 @@ jar {
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
 	def branchName = obtainCurrentBranchName()
-	
+
 	src "https://raw.githubusercontent.com/demo4echo/echobe/${branchName}/src/main/proto/echo.proto"
 	dest "${externalEchoBeProtoFilePath}"
 //	overwrite true
@@ -102,7 +102,7 @@ task initializer(dependsOn: 'downloadEchoBeProtoFile')
 
 // Make every other task depend on 'initializer'
 // matching() and all() are "live" so any tasks declared after this line will also depend on 'initializer'
-tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile' }.all { 
+tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile' }.all {
 	Task task -> task.dependsOn initializer
 }
 
@@ -125,8 +125,8 @@ helm {
 }
 
 // Master task that runs a complete flow, except publishing the version and the artifacts
-task DR (dependsOn: [dockerBuild,helmPackage,helmUpdate,helmTestAndClean,certify]) {
-	helmPackage.mustRunAfter dockerBuild
+task DR (dependsOn: [dockerTag,helmPackage,helmUpdate,helmTestAndClean,certify]) {
+	helmPackage.mustRunAfter dockerTag
 
 	helmUpdate.mustRunAfter helmPackage
 
