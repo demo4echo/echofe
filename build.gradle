@@ -136,6 +136,8 @@ task DR (dependsOn: [dockerTag,helmPackage,helmUpdate,helmTestAndClean,certify])
 }
 
 // Master task that runs a complete flow (like the Jenkins Pipeline)
-task AIO (dependsOn: [DR,publishVersion]) {
-	publishVersion.mustRunAfter DR
+task AIO (dependsOn: [DR,dockerTagsPush,publishVersion]) {
+	dockerTagsPush.mustRunAfter DR
+
+	publishVersion.mustRunAfter dockerTagsPush
 }
