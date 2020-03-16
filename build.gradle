@@ -124,7 +124,7 @@ helm {
 	}
 }
 
-// Master task that runs a complete flow, except publishing the version
+// Master task that runs a complete flow, except publishing the version and the artifacts
 task DR (dependsOn: [dockerBuild,helmPackage,helmUpdate,helmTestAndClean,certify]) {
 	helmPackage.mustRunAfter dockerBuild
 
