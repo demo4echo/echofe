@@ -125,19 +125,17 @@ helm {
 }
 
 // Master task that runs a complete flow, except publishing the version and the artifacts
-task DR (dependsOn: [dockerTag,helmPackage,helmUpdate,helmTestAndClean,certify]) {
-	helmPackage.mustRunAfter dockerTag
+task DR (dependsOn: [manifestDockerImage,manifestHelmChart,helmUpdate,helmTestAndClean,certify]) {
+	manifestHelmChart.mustRunAfter manifestDockerImage,dockerPublish
 
-	helmUpdate.mustRunAfter helmPackage
+	helmUpdate.mustRunAfter manifestHelmChart
 
 	helmTestAndClean.mustRunAfter helmUpdate
-
+	
 	certify.mustRunAfter helmTestAndClean
 }
 
 // Master task that runs a complete flow (like the Jenkins Pipeline)
-task AIO (dependsOn: [DR,dockerTagsPush,publishVersion]) {
-	dockerTagsPush.mustRunAfter DR
-
-	publishVersion.mustRunAfter dockerTagsPush
+task AIO (dependsOn: [DR,publishVersion]) {
+	publishVersion.mustRunAfter DR
 }
