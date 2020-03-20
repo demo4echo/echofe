@@ -98,13 +98,10 @@ task downloadEchoBeProtoFile(type: Download) {
 	onlyIfModified true
 }
 
-// Define an Initializer task
-task initializer(dependsOn: 'downloadEchoBeProtoFile')
-
-// Make every other task depend on 'initializer'
-// matching() and all() are "live" so any tasks declared after this line will also depend on 'initializer'
+// Make every task depend on 'downloadEchoBeProtoFile' (apart from the 'initializer' task, and some more exceptions)
+// matching() and all() are "live" so any tasks declared after this line will also depend on 'downloadEchoBeProtoFile'
 tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile' }.all {
-	Task task -> task.dependsOn initializer
+	Task task -> task.dependsOn downloadEchoBeProtoFile
 }
 
 // Adjust Docker
