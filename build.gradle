@@ -47,6 +47,7 @@ plugins
 ext {
 	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
+	externalEchoBeProtoRemoteUrl = "https://raw.githubusercontent.com/${serviceName}/${productName}/${branchName}/src/main/proto/echo.proto"
 }
 
 dependencies
@@ -92,8 +93,8 @@ jar {
 task downloadEchoBeProtoFile(type: Download) {
 	def branchName = obtainCurrentBranchName()
 
-	src "https://raw.githubusercontent.com/demo4echo/echobe/${branchName}/src/main/proto/echo.proto"
-	dest "${externalEchoBeProtoFilePath}"
+	src externalEchoBeProtoRemoteUrl
+	dest externalEchoBeProtoFilePath
 //	overwrite true
 	onlyIfModified true
 }
