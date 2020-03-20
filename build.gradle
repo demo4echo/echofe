@@ -43,11 +43,19 @@ plugins
 	id 'org.ajoberstar.grgit'
 }
 
+// Pre-Defined project properties
+project.description = 'The Echo Frontend demo product'
+
+// Load common build logic
+def	commonGradleFilePath = "./${-> common_sub_module_name}/common.gradle"
+apply from: "${commonGradleFilePath}"
+
 // Adding some specific properties
 ext {
+	branchName = obtainCurrentBranchName()
 	externalEchoBeProtoFolderPath = buildDir.getName() + "/ext/main/proto"
 	externalEchoBeProtoFilePath = "${externalEchoBeProtoFolderPath}/echo.proto"
-	externalEchoBeProtoRemoteUrl = "https://raw.githubusercontent.com/${serviceName}/${productName}/${branchName}/src/main/proto/echo.proto"
+	externalEchoBeProtoRemoteUrl = "https://raw.githubusercontent.com/${service_name}/echobe/${branchName}/src/main/proto/echo.proto"
 }
 
 dependencies
@@ -72,13 +80,6 @@ dependencies
 	protobuf files("${externalEchoBeProtoFolderPath}")
 }
 
-// Pre-Defined project properties
-project.description = 'The Echo Frontend demo product'
-
-// Load common build logic
-def	commonGradleFilePath = "./${-> common_sub_module_name}/common.gradle"
-apply from: "${commonGradleFilePath}"
-
 //
 // Make specific adjustments
 //
@@ -91,8 +92,6 @@ jar {
 
 // Download shared resource with other repositories
 task downloadEchoBeProtoFile(type: Download) {
-	def branchName = obtainCurrentBranchName()
-
 	src externalEchoBeProtoRemoteUrl
 	dest externalEchoBeProtoFilePath
 //	overwrite true
