@@ -98,9 +98,9 @@ task downloadEchoBeProtoFile(type: Download) {
 	onlyIfModified true
 }
 
-// Make every task depend on 'downloadEchoBeProtoFile' (apart from the 'initializer' task, and some more exceptions)
+// Make every task depend on 'downloadEchoBeProtoFile' (apart from the 'initializer' and 'printApplicableVersion' tasks, and some more exceptions)
 // matching() and all() are "live" so any tasks declared after this line will also depend on 'downloadEchoBeProtoFile'
-tasks.matching { it.name != 'initializer' && it.name != 'downloadEchoBeProtoFile' }.all {
+tasks.matching { it.name != 'initializer' && it.name != 'printApplicableVersion' && it.name != 'downloadEchoBeProtoFile' }.all {
 	Task task -> task.dependsOn downloadEchoBeProtoFile
 }
 
@@ -134,6 +134,6 @@ task DR (dependsOn: [manifestDockerImage,manifestHelmChart,helmUpdate,helmTestAn
 }
 
 // Master task that runs a complete flow (like the Jenkins Pipeline)
-task AIO (dependsOn: [DR,publishVersion]) {
-	publishVersion.mustRunAfter DR
+task AIO (dependsOn: [DR,publishApplicableVersion]) {
+	publishApplicableVersion.mustRunAfter DR
 }
