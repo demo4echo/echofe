@@ -24,6 +24,7 @@ plugins
 	// gradle-helm-plugin plugins
 	id 'org.unbroken-dome.helm'
 	id 'org.unbroken-dome.helm-releases'
+	id 'org.unbroken-dome.helm-publish'
 
 	// Gradle Download Task
 	id 'de.undercouch.download'

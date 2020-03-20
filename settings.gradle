@@ -14,6 +14,7 @@ pluginManagement {
 		id 'com.palantir.docker-run' version "${plugin_com_palantir_docker_run_version}"
 		id 'org.unbroken-dome.helm' version "${plugin_org_unbroken_dome_helm_version}"
 		id 'org.unbroken-dome.helm-releases' version "${plugin_org_unbroken_dome_helm_releases_version}"
+		id 'org.unbroken-dome.helm-publish' version "${plugin_org_unbroken_dome_helm_publish_version}"
 		id 'de.undercouch.download' version "${plugin_de_undercouch_download_version}"
 		id 'com.google.protobuf' version "${plugin_com_google_protobuf_version}"
 		id 'com.wiredforcode.spawn' version "${plugin_com_wiredforcode_spawn_version}"
